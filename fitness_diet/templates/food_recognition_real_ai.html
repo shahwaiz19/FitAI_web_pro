@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Recognition - FitAI</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        :root {
+            --primary-color: #11d452;
+            --secondary-color: #f8fcf9;
+            --text-primary: #0d1b12;
+            --text-secondary: #4c9a66;
+            --accent-color: #e8f5e8;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: linear-gradient(135deg, #f8fcf9 0%, #e8f5e8 100%);
+            min-height: 100vh;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .upload-zone {
+            transition: all 0.3s ease;
+            border: 3px dashed #11d452;
+            background: linear-gradient(135deg, rgba(17, 212, 82, 0.05) 0%, rgba(17, 212, 82, 0.02) 100%);
+        }
+
+        .upload-zone:hover {
+            border-color: #0ea33b;
+            background: linear-gradient(135deg, rgba(17, 212, 82, 0.08) 0%, rgba(17, 212, 82, 0.05) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(17, 212, 82, 0.15);
+        }
+
+        .upload-zone.dragover {
+            border-color: #0ea33b;
+            background: linear-gradient(135deg, rgba(17, 212, 82, 0.1) 0%, rgba(17, 212, 82, 0.08) 100%);
+            transform: scale(1.02);
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fcf9 100%);
+            border: 1px solid rgba(17, 212, 82, 0.2);
+            box-shadow: 0 8px 32px rgba(17, 212, 82, 0.1);
+        }
+
+        .nutrition-bar {
+            background: linear-gradient(90deg, #11d452 0%, #0ea33b 100%);
+            border-radius: 20px;
+            height: 8px;
+            transition: width 1s ease-out;
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .floating-elements::before,
+        .floating-elements::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(17, 212, 82, 0.1) 0%, rgba(17, 212, 82, 0.05) 100%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-elements::before {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-elements::after {
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #11d452 0%, #0ea33b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="relative">
+    <div class="floating-elements"></div>
+
+    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-4xl">
+            <!-- Header -->
+            <div class="text-center mb-8 fade-in">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full mb-6 shadow-lg">
+                    <span class="material-symbols-outlined text-3xl text-white">restaurant</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">AI Food Recognition</h1>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Upload a photo of your meal and get instant nutritional analysis powered by advanced AI</p>
+            </div>
+
+            <!-- Main Content -->
+            <div class="glass-effect rounded-2xl shadow-2xl p-8 md:p-12 fade-in">
+                <form id="food-recognition-form" enctype="multipart/form-data" class="space-y-8">
+                    {% csrf_token %}
+
+                    <!-- Upload Zone -->
+                    <div class="text-center">
+                        <div class="relative">
+                            <input type="file" id="food-image" name="food_image" accept="image/*" class="hidden" required>
+
+                            <label for="food-image" id="upload-zone" class="upload-zone cursor-pointer block w-full py-16 px-8 rounded-2xl text-center transition-all duration-300">
+                                <div class="flex flex-col items-center space-y-4">
+                                    <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                                        <span class="material-symbols-outlined text-4xl text-white">cloud_upload</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-2xl font-semibold text-gray-800 mb-2">Upload Your Food Photo</h3>
+                                        <p class="text-gray-600 mb-2">Click to browse or drag and drop your image here</p>
+                                        <p class="text-sm text-gray-500">Supports PNG, JPG, JPEG up to 10MB</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Image Preview -->
+                        <div id="image-preview" class="mt-8 hidden">
+                            <div class="relative inline-block">
+                                <img id="preview-img" class="max-w-full h-auto max-h-80 rounded-xl shadow-2xl border-4 border-white" alt="Food preview">
+                                <div class="absolute -top-4 -right-4 w-12 h-12 bg-red-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors" onclick="removeImage()">
+                                    <span class="material-symbols-outlined text-white text-xl">close</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-4">Image uploaded successfully!</p>
+                        </div>
+                    </div>
+
+                    <!-- Analyze Button -->
+                    <div class="text-center">
+                        <button type="submit" id="analyze-btn" class="inline-flex items-center justify-center px-12 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            <span class="material-symbols-outlined mr-3 text-2xl">search</span>
+                            Analyze Food
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Loading State -->
+                <div id="loading" class="mt-12 hidden text-center">
+                    <div class="inline-flex items-center space-x-4 bg-white rounded-full px-8 py-4 shadow-lg">
+                        <div class="animate-spin rounded-full h-8 w-8 border-4 border-green-500 border-t-transparent"></div>
+                        <div>
+                            <p class="text-lg font-semibold text-gray-800">Analyzing your food...</p>
+                            <p class="text-sm text-gray-600">This may take a few seconds</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div id="results" class="mt-12 hidden">
+                    <div class="result-card rounded-2xl p-8">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                                <span class="material-symbols-outlined text-3xl text-white">check_circle</span>
+                            </div>
+                        </div>
+
+                        <h3 class="text-3xl font-bold text-center gradient-text mb-8">Analysis Complete!</h3>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Food Info -->
+                            <div class="space-y-6">
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-green-600">restaurant_menu</span>
+                                        Detected Food
+                                    </h4>
+                                    <p id="food-name" class="text-2xl font-bold text-gray-900">Loading...</p>
+                                    <p id="confidence" class="text-sm text-gray-600 mt-2">Analyzing...</p>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-green-600">local_fire_department</span>
+                                        Nutritional Info
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-700">Calories</span>
+                                            <span id="calories" class="font-bold text-2xl text-green-600">Loading...</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-700">Protein</span>
+                                            <span id="protein" class="font-semibold text-green-600">Loading...</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-700">Carbs</span>
+                                            <span id="carbs" class="font-semibold text-green-600">Loading...</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-gray-700">Fat</span>
+                                            <span id="fat" class="font-semibold text-green-600">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Visual Elements -->
+                            <div class="space-y-6">
+                                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4">Health Score</h4>
+                                    <div class="relative w-32 h-32 mx-auto mb-4">
+                                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                                  fill="none" stroke="#e5e7eb" stroke-width="3"/>
+                                            <path id="health-score-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                                  fill="none" stroke="#11d452" stroke-width="3" stroke-dasharray="75, 100"/>
+                                        </svg>
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <span id="health-score" class="text-3xl font-bold text-green-600">7.5</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-600">Out of 10</p>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-green-600">tips_and_updates</span>
+                                        Recommendations
+                                    </h4>
+                                    <ul class="space-y-2 text-sm text-gray-700">
+                                        <li class="flex items-start">
+                                            <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                                            <span id="rec1">Analyzing nutritional content...</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                                            <span id="rec2">Checking health score...</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                                            <span id="rec3">Generating recommendations...</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
+                            <button onclick="analyzeAgain()" class="inline-flex items-center justify-center px-8 py-3 bg-gray-200 text-gray-800 font-semibold rounded-full hover:bg-gray-300 transition-colors">
+                                <span class="material-symbols-outlined mr-2">refresh</span>
+                                Analyze Another
+                            </button>
+                            <button onclick="saveToDiary()" class="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:scale-105 transition-all">
+                                <span class="material-symbols-outlined mr-2">save</span>
+                                Save to Diary
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="error" class="mt-12 hidden">
+                    <div class="bg-red-50 border-2 border-red-200 rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-3xl text-red-600">error</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-red-800 mb-2">Analysis Failed</h3>
+                        <p id="error-message" class="text-red-600">Unable to analyze the image. Please try again.</p>
+                        <button onclick="tryAgain()" class="mt-4 inline-flex items-center justify-center px-6 py-2 bg-red-600 text-white font-semibold rounded-full hover:bg-red-700 transition-colors">
+                            <span class="material-symbols-outlined mr-2">refresh</span>
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-8 text-gray-600">
+                <p class="text-sm">Powered by AI • Fast & Accurate Analysis</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Drag and drop functionality
+        const uploadZone = document.getElementById('upload-zone');
+        const fileInput = document.getElementById('food-image');
+        const imagePreview = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+        const form = document.getElementById('food-recognition-form');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const error = document.getElementById('error');
+        const analyzeBtn = document.getElementById('analyze-btn');
+
+        // Drag and drop events
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                    uploadZone.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage() {
+            imagePreview.classList.add('hidden');
+            uploadZone.style.display = 'block';
+            fileInput.value = '';
+        }
+
+        // Form submission with real AI
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!fileInput.files[0]) {
+                showError('Please select an image first.');
+                return;
+            }
+
+            // Show loading
+            loading.classList.remove('hidden');
+            results.classList.add('hidden');
+            error.classList.add('hidden');
+            analyzeBtn.disabled = true;
+
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append('food_image', fileInput.files[0]);
+
+            try {
+                // Make actual API call to the backend
+                const response = await fetch('/food-recognition/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Update the results with real AI data
+                    updateResults(data);
+                    loading.classList.add('hidden');
+                    results.classList.remove('hidden');
+                } else {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+
+            } catch (error) {
+                showError(error.message || 'Failed to analyze image. Please try again.');
+            } finally {
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        function updateResults(data) {
+            // Update food name and confidence
+            document.getElementById('food-name').textContent = data.food_name || 'Unknown Food';
+            document.getElementById('confidence').textContent = `Confidence: ${data.confidence || 'N/A'}`;
+
+            // Update nutritional information
+            document.getElementById('calories').textContent = data.calories || 'Not found';
+            document.getElementById('protein').textContent = data.protein || 'Not found';
+            document.getElementById('carbs').textContent = data.carbs || 'Not found';
+            document.getElementById('fat').textContent = data.fat || 'Not found';
+
+            // Update health score
+            const healthScore = data.health_score || 7.5;
+            document.getElementById('health-score').textContent = healthScore;
+
+            // Update health score circle
+            const circumference = 2 * Math.PI * 15.9155;
+            const strokeDasharray = (healthScore / 10) * circumference;
+            document.getElementById('health-score-path').setAttribute('stroke-dasharray', `${strokeDasharray}, ${circumference}`);
+
+            // Generate recommendations based on nutritional data
+            updateRecommendations(data);
+        }
+
+        function updateRecommendations(data) {
+            const recommendations = [];
+
+            // Analyze calories
+            if (data.calories && data.calories !== 'Not found') {
+                const calValue = parseFloat(data.calories.split(' ')[0]);
+                if (calValue < 200) {
+                    recommendations.push('Low calorie meal - good for weight management');
+                } else if (calValue < 400) {
+                    recommendations.push('Moderate calories - balanced portion size');
+                } else if (calValue < 600) {
+                    recommendations.push('Higher calorie meal - consider portion control');
+                } else {
+                    recommendations.push('High calorie meal - monitor intake carefully');
+                }
+            }
+
+            // Analyze protein
+            if (data.protein && data.protein !== 'Not found') {
+                const proteinValue = parseFloat(data.protein.replace('g', ''));
+                if (proteinValue > 20) {
+                    recommendations.push('Good protein source for muscle maintenance');
+                } else if (proteinValue > 10) {
+                    recommendations.push('Moderate protein content');
+                } else {
+                    recommendations.push('Consider adding protein-rich foods');
+                }
+            }
+
+            // Default recommendations if data is incomplete
+            if (recommendations.length === 0) {
+                recommendations.push('Upload different food for detailed analysis');
+                recommendations.push('Try foods with clear, well-lit images');
+                recommendations.push('Single food items work best for analysis');
+            }
+
+            // Update recommendation elements
+            document.getElementById('rec1').textContent = recommendations[0] || 'Analyzing nutritional content...';
+            document.getElementById('rec2').textContent = recommendations[1] || 'Checking health score...';
+            document.getElementById('rec3').textContent = recommendations[2] || 'Generating recommendations...';
+        }
+
+        function showError(message) {
+            error.classList.remove('hidden');
+            document.getElementById('error-message').textContent = message;
+            loading.classList.add('hidden');
+            results.classList.add('hidden');
+            analyzeBtn.disabled = false;
+        }
+
+        function analyzeAgain() {
+            results.classList.add('hidden');
+            imagePreview.classList.add('hidden');
+            uploadZone.style.display = 'block';
+            fileInput.value = '';
+        }
+
+        function saveToDiary() {
+            alert('Food saved to your nutrition diary!');
+        }
+
+        function tryAgain() {
+            error.classList.add('hidden');
+        }
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add pulse animation to upload zone initially
+            uploadZone.classList.add('pulse-animation');
+
+            // Remove pulse after 3 seconds
+            setTimeout(() => {
+                uploadZone.classList.remove('pulse-animation');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

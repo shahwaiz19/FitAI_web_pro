@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitAI - AI-Powered Fitness and Diet Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #11d452 0%, #0d1b12 100%);
+        }
+        .card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .feature-card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .feature-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-gray-900">FitAI</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'landing' %}" class="text-gray-600 hover:text-gray-900">Home</a>
+                    <a href="{% url 'diet_plan' %}" class="text-gray-600 hover:text-gray-900">Diet Plans</a>
+                    <a href="{% url 'workout_plan' %}" class="text-gray-600 hover:text-gray-900">Workout Plans</a>
+                    <a href="{% url 'onboarding_welcome' %}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                Your AI-Powered Fitness and Diet Assistant
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-blue-100">
+                Achieve your health goals with personalized plans, smart tracking, and expert guidance.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'onboarding_welcome' %}"
+                   class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Get Started for Free
+                </a>
+                <a href="{% url 'workout_plan' %}"
+                   class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+                    Try AI Workout
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Key Features</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Our AI-powered platform offers a range of features to help you achieve your fitness and diet goals.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Food Recognition -->
+                <div class="feature-card card rounded-2xl shadow-xl p-6">
+                    <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H3a2 2 0 01-2-2V9z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 text-center">Food Recognition</h3>
+                    <p class="text-gray-600 text-center mb-4">Identify food from images and get detailed nutritional information instantly.</p>
+                    <a href="{% url 'food_recognition' %}" class="text-blue-600 hover:text-blue-700 font-semibold">Try Now →</a>
+                </div>
+
+                <!-- AI Diet Plans -->
+                <div class="feature-card card rounded-2xl shadow-xl p-6">
+                    <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 text-center">AI Diet Plans</h3>
+                    <p class="text-gray-600 text-center mb-4">Personalized meal plans using advanced K-Means clustering for optimal nutrition.</p>
+                    <a href="{% url 'diet_plan' %}" class="text-green-600 hover:text-green-700 font-semibold">Try Now →</a>
+                </div>
+
+                <!-- AI Workout Suggestions -->
+                <div class="feature-card card rounded-2xl shadow-xl p-6">
+                    <div class="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 text-center">AI Workout Suggestions</h3>
+                    <p class="text-gray-600 text-center mb-4">Get personalized workout plans based on calories you want to burn using our AI-powered model.</p>
+                    <a href="{% url 'workout_plan' %}" class="text-purple-600 hover:text-purple-700 font-semibold">Try Now →</a>
+                </div>
+
+                <!-- Health Predictions -->
+                <div class="feature-card card rounded-2xl shadow-xl p-6">
+                    <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 text-center">Health Predictions</h3>
+                    <p class="text-gray-600 text-center mb-4">AI-powered health assessments for heart and lung disease prediction.</p>
+                    <a href="{% url 'heart_disease_page' %}" class="text-red-600 hover:text-red-700 font-semibold">Try Now →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Health?</h2>
+            <p class="text-xl mb-8 text-blue-100">
+                Join thousands of users who are achieving their fitness and diet goals with FitAI.
+            </p>
+            <a href="{% url 'onboarding_welcome' %}"
+               class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                Create Your Free Account
+            </a>
+        </div>
+    </section>
+</body>
+</html>

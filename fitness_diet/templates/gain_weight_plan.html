@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  function toggleLayout() {
+    const hash = window.location.hash;
+    const mainLayout = document.getElementById('main-layout');
+    const dashboardLayout = document.getElementById('dashboard-layout');
+
+    if (hash === '#dashboard') {
+      mainLayout.style.display = 'none';
+      dashboardLayout.style.display = 'block';
+    } else {
+      mainLayout.style.display = 'block';
+      dashboardLayout.style.display = 'none';
+    }
+  }
+
+  // Modal functionality
+  function showRegenerateModal() {
+    document.getElementById('regenerate-modal').classList.remove('hidden');
+    document.getElementById('modal-overlay').classList.remove('hidden');
+  }
+
+  function hideRegenerateModal() {
+    document.getElementById('regenerate-modal').classList.add('hidden');
+    document.getElementById('modal-overlay').classList.add('hidden');
+  }
+
+  function handleRegenerateSubmit(event) {
+    event.preventDefault();
+
+    // Get form data
+    const formData = new FormData(event.target);
+    const dietaryRestrictions = [];
+    const checkboxes = document.querySelectorAll('input[name="dietary[]"]:checked');
+    checkboxes.forEach(checkbox => dietaryRestrictions.push(checkbox.value));
+
+    const equipment = formData.get('equipment');
+    const intensity = formData.get('intensity');
+
+    // Here you would typically send this data to your backend
+    console.log('Dietary Restrictions:', dietaryRestrictions);
+    console.log('Equipment:', equipment);
+    console.log('Intensity:', intensity);
+
+    // For now, just show an alert and close the modal
+    alert('Plan regeneration preferences saved! Your new plan will be generated based on your selections.');
+    hideRegenerateModal();
+
+    // You could also update the UI to reflect the changes
+    // For example, update the user's profile section
+  }
+
+  window.addEventListener('load', toggleLayout);
+  window.addEventListener('hashchange', toggleLayout);
+</script>
+</head>
+<body class="bg-gray-50">
+<div class="relative flex size-full min-h-screen flex-col bg-gray-50 group/design-root overflow-x-hidden" style='font-family: Inter, "Noto Sans", sans-serif;'>
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 px-10 py-4 bg-white">
+<div class="flex items-center gap-4 text-gray-900">
+<svg class="h-8 w-8 text-[#11d452]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_543)">
+<path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M7.24189 26.4066C7.31369 26.4411 7.64204 26.5637 8.52504 26.3738C9.59462 26.1438 11.0343 25.5311 12.7183 24.4963C14.7583 23.2426 17.0256 21.4503 19.238 19.238C21.4503 17.0256 23.2426 14.7583 24.4963 12.7183C25.5311 11.0343 26.1438 9.59463 26.3738 8.52504C26.5637 7.64204 26.4411 7.31369 26.4066 7.24189C26.345 7.21246 26.143 7.14535 25.6664 7.1918C24.9745 7.25925 23.9954 7.5498 22.7699 8.14278C20.3369 9.32007 17.3369 11.4915 14.4142 14.4142C11.4915 17.3369 9.32007 20.3369 8.14278 22.7699C7.5498 23.9954 7.25925 24.9745 7.1918 25.6664C7.14534 26.143 7.21246 26.345 7.24189 26.4066ZM29.9001 10.7285C29.4519 12.0322 28.7617 13.4172 27.9042 14.8126C26.465 17.1544 24.4686 19.6641 22.0664 22.0664C19.6641 24.4686 17.1544 26.465 14.8126 27.9042C13.4172 28.7617 12.0322 29.4519 10.7285 29.9001L21.5754 40.747C21.6001 40.7606 21.8995 40.931 22.8729 40.7217C23.9424 40.4916 25.3821 39.879 27.0661 38.8441C29.1062 37.5904 31.3734 35.7982 33.5858 33.5858C35.7982 31.3734 37.5904 29.1062 38.8441 27.0661C39.879 25.3821 40.4916 23.9425 40.7216 22.8729C40.931 21.8995 40.7606 21.6001 40.747 21.5754L29.9001 10.7285ZM29.2403 4.41187L43.5881 18.7597C44.9757 20.1473 44.9743 22.1235 44.6322 23.7139C44.2714 25.3919 43.4158 27.2666 42.252 29.1604C40.8128 31.5022 38.8165 34.012 36.4142 36.4142C34.012 38.8165 31.5022 40.8128 29.1604 42.252C27.2666 43.4158 25.3919 44.2714 23.7139 44.6322C22.1235 44.9743 20.1473 44.9757 18.7597 43.5881L4.41187 29.2403C3.29027 28.1187 3.08209 26.5973 3.21067 25.2783C3.34099 23.9415 3.8369 22.4852 4.54214 21.0277C5.96129 18.0948 8.43335 14.7382 11.5858 11.5858C14.7382 8.43335 18.0948 5.9613 21.0277 4.54214C22.4852 3.8369 23.9415 3.34099 25.2783 3.21067C26.5973 3.08209 28.1187 3.29028 29.2403 4.41187Z" fill="currentColor" fill-rule="evenodd"></path>
+</g>
+<defs>
+<clipPath id="clip0_6_543">
+<rect fill="white" height="48" width="48"></rect>
+</clipPath>
+</defs>
+</svg>
+<h2 class="text-gray-900 text-2xl font-bold leading-tight tracking-tighter">FitAI</h2>
+</div>
+<nav class="flex items-center gap-8 text-gray-600">
+<a class="text-base font-medium hover:text-gray-900 transition-colors" href="{% url 'landing' %}">Home</a>
+<a class="text-base font-medium hover:text-gray-900 transition-colors" href="#dashboard">Dashboard</a>
+<a class="text-base font-medium hover:text-gray-900 transition-colors" href="#">Nutrition</a>
+<a class="text-base font-medium hover:text-gray-900 transition-colors" href="#">Workouts</a>
+<a class="text-base font-medium hover:text-gray-900 transition-colors" href="#">Community</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-full h-10 w-10 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+<span class="material-symbols-outlined"> notifications </span>
+</button>
+<a href="{% url 'profile' %}" class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 hover:ring-2 hover:ring-[#11d452] transition-all" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAPCFWpU4Ua0k8Oi_AMqUJzpOlQCtVGw-NPCnehY0ZdbG1qeo6H8WDuWiQpSXlA-iyqCturfAB267e-tz0rkr2ttl5L2YaLJrHilDzwvXHRXYzcO6mDV0yxopDRw-TZhIz1DfkZ5VkdtnU2zyeVPQJ3ReERN7p5e7MnjUVDFcCidaRbo4VIHaxatodRgROHrMI7panselSlEmFoTPxmeqvDAjGE75nvw4KCcvyB-QEcN_5eT7VNWksRTKSgderT5a2sXriulMUtmAZc");'></a>
+</div>
+</header>
+<main class="flex-1 px-40 py-10">
+<div id="main-layout" class="layout-content-container flex flex-col max-w-4xl mx-auto">
+{% if user %}
+<div class="p-4">
+<h2 class="text-slate-800 text-2xl font-bold leading-tight tracking-tight">Welcome, {{ user.name }}!</h2>
+</div>
+{% endif %}
+<div class="space-y-4 mb-8">
+<div class="w-full bg-gray-200 rounded-full h-2">
+<div class="bg-[#11d452] h-2 rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<h1 class="text-gray-900 text-5xl font-bold leading-tight tracking-tighter mb-12">Your Goal: Gain Weight</h1>
+<section class="mb-12">
+<h2 class="text-gray-900 text-3xl font-bold leading-tight tracking-tight mb-6">Nutrition Recommendations</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+<div class="bg-white rounded-xl shadow-sm overflow-hidden group transform hover:-translate-y-1 transition-transform duration-300 ease-in-out">
+<div class="w-full h-32 bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCWeE5Q8zDMxEyia2kTZ1PhGbrDTIAjsaGrRh0YSNEUYJqkh9iP4M_8rMVnVn-AZHjVBr8qRrZKr2K6JM0qz84uNnda60NbqX-B2_ObkzH1Hp7ZbPlcSn7DLipZ7AlrqaYG3jWC7hVvisYoYm6MwLDjCJp8UUA_tsELcYpG8-4w8Qg5g7yGhymweb4cs3kpyF9zENMAB6ku4Ydn2-35c2G09EWCUZ8IonPzco6c8Mwn1zil3lfRRKp3V4NWF6D6kqKnIlM3NAlrtFKZ");'></div>
+<div class="p-4">
+<p class="text-gray-900 text-lg font-semibold">Nuts</p>
+<p class="text-gray-500 text-sm">200 kcal / serving</p>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-sm overflow-hidden group transform hover:-translate-y-1 transition-transform duration-300 ease-in-out">
+<div class="w-full h-32 bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDb9ToJHN4aG2PCSoeCpfpsXOBVz4xKDLaUCjBp0h_cRrZMuLZU_4fu-bi7tLWBHHStJESQtB7nXAjDVQHdMukzXyTWRJq-0Ha098lyoPgGbMqShaIestpoB-uRjNadah9s9e5js491jjKAVQsH6ZEy5FsZUOR-A3enk7uBNM4l3i6bRt-EldxXXhbJIfTn46w_Bhe8RhX8fX7R0IEkHrkISHK8-JjTf_sZHRFyVDErfM8N7D8s7fA_L022XB5Q9Li6OFZeyFRWDzVL");'></div>
+<div class="p-4">
+<p class="text-gray-900 text-lg font-semibold">Avocados</p>
+<p class="text-gray-500 text-sm">320 kcal / serving</p>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-sm overflow-hidden group transform hover:-translate-y-1 transition-transform duration-300 ease-in-out">
+<div class="w-full h-32 bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB1LMRPg6Ct5qTaava4AwarvQsKqfpsb-dGnX96LfMrsVOuBm1IBlPsd__NhLuFZCYsfMkByL97iyCzvg2beAhgxgRbfY9NihQx-ssRKlux_GLDRj2sJar3SqI6sQas_d_2dGtpjwjx53VQbExPetOA5MFWu_aYXLcSRODESk-NDhln_IriAVYPAeEtwMquk3ANzthp3osvuOgwt0hr8sNj18-MV68Jrrgf_PwOUKLgNXBGoossx8Ra6v85QNnGPH0m-QNtLWvDkS9r");'></div>
+<div class="p-4">
+<p class="text-gray-900 text-lg font-semibold">Chicken Breast</p>
+<p class="text-gray-500 text-sm">165 kcal / serving</p>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-sm overflow-hidden group transform hover:-translate-y-1 transition-transform duration-300 ease-in-out">
+<div class="w-full h-32 bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCJUN7wYGri4bcOZfj6IdSKUFKwZimzi-kBgQnDZLdnKfDaQFYzRq6g-AeqV5xjdKQQCpCjMXzSHDPL0MU85qtu2ByZzi74sTF22Cu0_RAA4u5KGCkhw4jwEhSJzU8j0ZvRWU47nvTsKByfCsH4b7npvjDoGC_M_wOCuXFQzinTFfv4EutLu5MXeZZrKd8cYyyBY-fKEXWqs-iDAsmP5qfbC-OXWSjE5zHDxDjmZIYdDpjMJBlmW-lPqU6gtlVoHoGNMRQjiv0J4ThJ");'></div>
+<div class="p-4">
+<p class="text-gray-900 text-lg font-semibold">Brown Rice</p>
+<p class="text-gray-500 text-sm">215 kcal / serving</p>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-sm overflow-hidden group transform hover:-translate-y-1 transition-transform duration-300 ease-in-out">
+<div class="w-full h-32 bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAyh6GjOae8piFgxk6b9GmXAFA4wMRvv-Dh3v3O4_llcglzvZdOzSN2y-5igz4fBVK9UG30Iwd__m8ZAFNCX1zSZ-C_K9aHs00HfAyoQLn57LWoMoGq6es05DDE8BDLa3kvZ-aYXuKbugGSpgtB01cMdD3h7YuAPaTjIe5qIiqpuvOVyCSaAIirekMoJKU_KPICI5uqYgN_loJKMq5kqv8SOVVypYQoDypujhUlYDNPmlGg9V7Ao7XO3hS8n64ptMAxhv4c3XQzkxMG");'></div>
+<div class="p-4">
+<p class="text-gray-900 text-lg font-semibold">Protein Shakes</p>
+<p class="text-gray-500 text-sm">250 kcal / serving</p>
+</div>
+</div>
+</div>
+</section>
+<section class="mb-12">
+<h2 class="text-gray-900 text-3xl font-bold leading-tight tracking-tight mb-6">Workout Recommendations</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center justify-center gap-4 group transform hover:-translate-y-1 transition-transform duration-300 ease-in-out">
+<div class="w-24 h-24 rounded-lg bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC7_Xnr9embnN_Lg9WwzFwPgDXi_zXz09qoQ6P5V7VWu67C1fXKR8DX6dyzysu02MJ2WggIaeDYkweNA4EzA4XT5lxQX7bYtUdqeimG2i22aurFb8KfQN5W7tllfImyHK9RyugLQ2LHMCtVDaFttcGq8-W0kkC9oXDeVknmaFYujszpWJYF1FN4xiDXmh_iF3dT0CCAAK64KbBNUPmG-NOBKXJiFSd-xCs6XYgF2QQg5b0iIQpIfUihr_2hf5uF4Tbk7FRUXzH_akWW");'></div>
+<p class="text-gray-900 text-lg font-semibold">Bench Press</p>
+</div>
+<div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center justify-center gap-4 group transform hover:-translate-y-1 transition-transform duration-300 ease-in-out">
+<div class="w-24 h-24 rounded-lg bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3fMo6JfKyvIJRHRtxm1WkvG6-9mVDe8V4SEoWwSeMjVkdVPThVjIoNqlroSWsq_0WwZq3eKhm00mTFJbv71HbW_J87FTswdXbPjCADxt6DL9rBaHd3KaxUfAheICQsZgEewNM31kT7YSPhSz2uD9UYm2JZ0JQouKpeDtwg1bMtQrM69Gz8agfx4OYyKCjUSTEZApEjY_83ApGIyJ-PGzYO-_Ave7vc2aD5H12FdPsn76VJMs9BhyseuSizFLextc9lHrv26kqDpLC");'></div>
+<p class="text-gray-900 text-lg font-semibold">Squats</p>
+</div>
+<div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center justify-center gap-4 group transform hover:-translate-y-1 transition-transform duration-300 ease-in-out">
+<div class="w-24 h-24 rounded-lg bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDj5Noy6wXyIW3O7rvwXoZX0IehXSYIV-E9OcZWyFFiu57K58-MdwdCmPfPUc_I-KUw_QI0B9cyDXhRZm_FVWb--K_OyRBmW4-44F2Mu05_TMGJ09vPvAjhtvxM-J0JuGwHTswfMfPJdHiq7cFjDgRQOPudTMkDLe0ucM4fX05eoOEjBaOGoBAD6wJJbwXjZEFKDHfwFW52NMO7-qfSjywxeKz9r0yMlad7nkGRGachbgEOnGDWv_Diah7YpVqJjWM6TW1RskTLbGk5");'></div>
+<p class="text-gray-900 text-lg font-semibold">Deadlifts</p>
+</div>
+<div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center justify-center gap-4 group transform hover:-translate-y-1 transition-transform duration-300 ease-in-out">
+<div class="w-24 h-24 rounded-lg bg-center bg-no-repeat bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDiyr3aD4BM3SPkbwfOG41q_tJ4D_SBo88khOYUcxi3HbWqV7gPNkFGbGWIUQTSUGYpliMckPCcJjxFro7MQrBE3URHK-PjtSiA-XAscXje9iBGfZqllhPCmIytcI20lgYI20S83GqF4tENZv1zidnriroJqTeKPUUibMexBBltAi1IRRqY5lqYrVXTNj-gMD-_UOJ2_X7Ckt662IrCTF-xByu-GU40sgxo4VvQx0gFocYSFeXfj9bP-WgkjNHnlXJPke2Z8e-_z0wI");'></div>
+<p class="text-gray-900 text-lg font-semibold">Push-ups</p>
+</div>
+</div>
+</section>
+<div class="flex justify-center mt-8">
+<a href="{% url 'dashboard' %}" class="flex items-center justify-center rounded-full h-14 px-10 bg-[#11d452] text-white text-lg font-bold tracking-wide shadow-lg hover:bg-green-600 transition-all duration-300 ease-in-out transform hover:scale-105 no-underline">
+<span class="truncate">Start Your Plan</span>
+<span class="material-symbols-outlined ml-2"> arrow_forward </span>
+</a>
+</div>
+</div>
+</main>
+
+<!-- Dashboard Layout -->
+<main id="dashboard-layout" class="flex-1 px-4 py-8 sm:px-6 lg:px-8" style="display: none;">
+<div class="mx-auto max-w-4xl">
+<div class="mb-8 text-center">
+<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Your Personalized Plans</h1>
+<p class="mt-3 text-lg text-gray-600">Tailored to your goals, updated daily.</p>
+</div>
+<div class="mb-8 grid grid-cols-1 gap-8 md:grid-cols-3">
+<div class="md:col-span-1">
+<div class="rounded-lg bg-white p-6 shadow-sm">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-16" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBeFH7lOoJjdH6z1mHxyvmF5mXIrfqOBY4ySuKGkcuuK17LAcct3cRlhuSxeCYMpiwGf2h-rWunNoe4p8EMgNYSbjXCbLlrdc9U7NxUi6enuHfknRtvX_lkX4DVFOhubFwuNw8fnfXk7PIUmfh-ozuVFheBI9y7QdVrx4ox1Nz9rWtuUCWDAXACwx-HcqzAsdocCFUaEG2PLHvPsb-lnmOdy3iqE04sGRLJayJ0DQcHAyH8tsF0MiO8cEY8kS9YwnZlTDjc5-TdV9gM");'></div>
+<div>
+<h3 class="text-lg font-bold text-gray-900">Sophia's Fitness Journey</h3>
+<p class="text-sm text-gray-500">Goal: Lose Weight | BMI: 24.5</p>
+</div>
+</div>
+</div>
+</div>
+<div class="rounded-lg bg-white p-6 shadow-sm md:col-span-2">
+<h2 class="mb-4 text-xl font-bold text-gray-900">Diet Plan</h2>
+<div class="space-y-4">
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Daily Calorie Target</p>
+<p class="text-sm font-semibold text-gray-900">1800 kcal</p>
+</div>
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Breakfast</p>
+<p class="text-sm text-gray-900">Oatmeal with berries and nuts</p>
+</div>
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Lunch</p>
+<p class="text-sm text-gray-900">Grilled chicken salad</p>
+</div>
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Dinner</p>
+<p class="text-sm text-gray-900">Baked salmon with quinoa</p>
+</div>
+<div class="flex justify-between">
+<p class="text-sm font-medium text-gray-500">Snacks</p>
+<p class="text-sm text-gray-900">Apple slices with almond butter</p>
+</div>
+</div>
+<div class="mt-6 flex gap-4">
+<button onclick="showRegenerateModal()" class="flex-1 rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-200">
+                  Regenerate Plan
+                </button>
+<button onclick="window.location.href='{% url 'customize_meals' %}'" class="flex-1 rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-200">
+                  Customize Meals
+                </button>
+</div>
+</div>
+</div>
+<div class="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
+<div class="rounded-lg bg-white p-6 shadow-sm">
+<h2 class="mb-4 text-xl font-bold text-gray-900">Workout Plan</h2>
+<div class="space-y-4">
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Monday</p>
+<p class="text-sm text-gray-900">Cardio (30m) + Strength (45m)</p>
+</div>
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Tuesday</p>
+<p class="text-sm font-semibold text-green-600">Rest</p>
+</div>
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Wednesday</p>
+<p class="text-sm text-gray-900">Yoga (60 min)</p>
+</div>
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Thursday</p>
+<p class="text-sm text-gray-900">Cardio (45 min)</p>
+</div>
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Friday</p>
+<p class="text-sm text-gray-900">Strength Training (60 min)</p>
+</div>
+<div class="flex justify-between border-b border-gray-200 pb-2">
+<p class="text-sm font-medium text-gray-500">Saturday</p>
+<p class="text-sm text-gray-900">Hiking (90 min)</p>
+</div>
+<div class="flex justify-between">
+<p class="text-sm font-medium text-gray-500">Sunday</p>
+<p class="text-sm font-semibold text-green-600">Rest</p>
+</div>
+</div>
+<button class="mt-6 w-full rounded-md bg-[#11d452] px-4 py-2 text-sm font-semibold text-white hover:bg-green-600">
+                  Start Workout
+                </button>
+</div>
+<div class="rounded-lg bg-white p-6 shadow-sm">
+<h2 class="mb-4 text-xl font-bold text-gray-900">Progress Tracking</h2>
+<div class="mb-6">
+<p class="text-sm font-medium text-gray-500">Weekly Progress</p>
+<p class="text-3xl font-bold text-green-600">+15%</p>
+</div>
+<div>
+<svg fill="none" height="148" preserveAspectRatio="none" viewBox="-3 0 478 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V149H326.769H0V109Z" fill="url(#paint0_linear_1131_5935)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#11d452" stroke-linecap="round" stroke-width="3"></path>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_1131_5935" x1="236" x2="236" y1="1" y2="149">
+<stop stop-color="#11d452" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="#11d452" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+<div class="mt-2 flex justify-around">
+<p class="text-xs font-bold text-gray-500">Mon</p>
+<p class="text-xs font-bold text-gray-500">Tue</p>
+<p class="text-xs font-bold text-gray-500">Wed</p>
+<p class="text-xs font-bold text-gray-500">Thu</p>
+<p class="text-xs font-bold text-gray-500">Fri</p>
+<p class="text-xs font-bold text-gray-500">Sat</p>
+<p class="text-xs font-bold text-gray-500">Sun</p>
+</div>
+</div>
+<button class="mt-6 w-full rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-200">
+                  Update Progress
+                </button>
+</div>
+</div>
+<div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+<button class="w-full rounded-md bg-[#11d452] px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-600 sm:w-auto">
+              Update My Plan
+            </button>
+<button class="w-full rounded-md border border-gray-300 bg-white px-6 py-3 text-base font-semibold text-gray-900 shadow-sm hover:bg-gray-50 sm:w-auto">
+              Edit Plan
+            </button>
+<button class="w-full rounded-md border border-gray-300 bg-white px-6 py-3 text-base font-semibold text-gray-900 shadow-sm hover:bg-gray-50 sm:w-auto">
+              Download / Share Plan
+            </button>
+</div>
+</div>
+</main>
+
+</div>
+</div>
+
+<!-- Modal Overlay -->
+<div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50"></div>
+
+<!-- Regenerate Plan Modal -->
+<div id="regenerate-modal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900">Regenerate Your Plan</h3>
+        <button onclick="hideRegenerateModal()" class="text-gray-400 hover:text-gray-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="regenerate-form" onsubmit="handleRegenerateSubmit(event)">
+        <div class="space-y-4">
+          <!-- Dietary Restrictions -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Dietary Restrictions</label>
+            <div class="space-y-2">
+              <label class="flex items-center">
+                <input type="checkbox" name="dietary[]" value="vegetarian" class="rounded border-gray-300 text-[#11d452] focus:ring-[#11d452]">
+                <span class="ml-2 text-sm text-gray-700">Vegetarian</span>
+              </label>
+              <label class="flex items-center">
+                <input type="checkbox" name="dietary[]" value="vegan" class="rounded border-gray-300 text-[#11d452] focus:ring-[#11d452]">
+                <span class="ml-2 text-sm text-gray-700">Vegan</span>
+              </label>
+              <label class="flex items-center">
+                <input type="checkbox" name="dietary[]" value="gluten-free" class="rounded border-gray-300 text-[#11d452] focus:ring-[#11d452]">
+                <span class="ml-2 text-sm text-gray-700">Gluten-Free</span>
+              </label>
+              <label class="flex items-center">
+                <input type="checkbox" name="dietary[]" value="dairy-free" class="rounded border-gray-300 text-[#11d452] focus:ring-[#11d452]">
+                <span class="ml-2 text-sm text-gray-700">Dairy-Free</span>
+              </label>
+              <label class="flex items-center">
+                <input type="checkbox" name="dietary[]" value="nut-free" class="rounded border-gray-300 text-[#11d452] focus:ring-[#11d452]">
+                <span class="ml-2 text-sm text-gray-700">Nut-Free</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Equipment Available -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Equipment Available</label>
+            <select name="equipment" aria-label="Equipment Available" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#11d452] focus:border-transparent">
+              <option value="none">No Equipment</option>
+              <option value="basic">Basic (Dumbbells, Resistance Bands)</option>
+              <option value="gym">Full Gym Access</option>
+              <option value="home-gym">Home Gym</option>
+            </select>
+          </div>
+
+          <!-- Intensity Level -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Intensity</label>
+            <select name="intensity" aria-label="Preferred Intensity" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#11d452] focus:border-transparent">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button type="button" onclick="hideRegenerateModal()" class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 px-4 py-2 text-sm font-medium text-white bg-[#11d452] border border-transparent rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#11d452]">
+            Regenerate Plan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</body></html>

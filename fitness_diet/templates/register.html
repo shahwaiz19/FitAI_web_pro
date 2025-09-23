@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register with Email</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color:red">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Enter your name"><br><br>
+        <input type="email" name="email" placeholder="Enter your email" required><br><br>
+        <input type="password" name="password" placeholder="Enter password" required><br><br>
+        <button type="submit">Register</button>
+    </form>
+
+    <hr>
+
+    <!-- Google Auth Button -->
+    <a href="{% url 'socialaccount_login' 'google' %}">
+        <button>Continue with Google</button>
+    </a>
+</body>
+</html>

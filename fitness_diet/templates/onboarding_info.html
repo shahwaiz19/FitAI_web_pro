@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>FitAI - Onboarding</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+      .form-input {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+      }
+      .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+      }
+    </style>
+</head>
+<body class="bg-white">
+<div class="relative flex min-h-screen flex-col bg-white" style="
+        background-image: url('data:image/svg+xml,%3csvg width=\'100%25\' height=\'100%25\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3crect width=\'100%25\' height=\'100%25\' fill=\'none\'/%3e%3ccircle cx=\'100%25\' cy=\'100%25\' r=\'150\' fill=\'rgba(17, 212, 82, 0.1)\'/%3e%3ccircle cx=\'0\' cy=\'0\' r=\'100\' fill=\'rgba(17, 212, 82, 0.05)\'/%3e%3c/svg%3e');
+      ">
+<header class="flex items-center justify-between px-6 sm:px-10 py-4">
+<div class="flex items-center gap-3 text-slate-800">
+<div class="size-7 text-[#11d452]">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold tracking-tight text-slate-900">
+            FitAI
+          </h2>
+</div>
+</header>
+<main class="flex flex-1 items-center justify-center py-12 sm:py-16">
+<div class="w-full max-w-lg px-4">
+<div class="text-center mb-8">
+<p class="text-sm font-semibold uppercase tracking-wider text-[#11d452]">Step 3 of 4</p>
+<h1 class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Tell us about yourself
+            </h1>
+<p class="mt-3 text-base text-slate-600">
+              This helps us create your personalized plan.
+            </p>
+</div>
+<form method="post" class="space-y-6" action="">
+{% csrf_token %}
+<div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+<div class="relative">
+<label class="block text-sm font-medium text-gray-700 mb-2" for="{{ form.age.id_for_label }}">Age</label>
+<div class="mt-1 relative rounded-md shadow-sm">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-gray-400 text-lg">cake</span>
+</div>
+{{ form.age }}
+</div>
+{% if form.age.errors %}
+<div class="text-red-500 text-sm mt-1">{{ form.age.errors.0 }}</div>
+{% endif %}
+</div>
+<div class="relative">
+<label class="block text-sm font-medium text-gray-700 mb-2" for="{{ form.sex.id_for_label }}">Sex</label>
+<div class="mt-1 relative rounded-md shadow-sm">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-gray-400 text-lg">wc</span>
+</div>
+{{ form.sex }}
+</div>
+{% if form.sex.errors %}
+<div class="text-red-500 text-sm mt-1">{{ form.sex.errors.0 }}</div>
+{% endif %}
+</div>
+</div>
+<div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+<div class="relative">
+<label class="block text-sm font-medium text-gray-700 mb-2" for="{{ form.height.id_for_label }}">Height</label>
+<div class="mt-1 relative rounded-md shadow-sm">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-gray-400 text-lg">height</span>
+</div>
+{{ form.height }}
+<div class="absolute inset-y-0 right-0 flex items-center pr-3">
+<span class="text-gray-500">cm</span>
+</div>
+</div>
+{% if form.height.errors %}
+<div class="text-red-500 text-sm mt-1">{{ form.height.errors.0 }}</div>
+{% endif %}
+</div>
+<div class="relative">
+<label class="block text-sm font-medium text-gray-700 mb-2" for="{{ form.weight.id_for_label }}">Weight</label>
+<div class="mt-1 relative rounded-md shadow-sm">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-gray-400 text-lg">fitness_center</span>
+</div>
+{{ form.weight }}
+<div class="absolute inset-y-0 right-0 flex items-center pr-3">
+<span class="text-gray-500">kg</span>
+</div>
+</div>
+{% if form.weight.errors %}
+<div class="text-red-500 text-sm mt-1">{{ form.weight.errors.0 }}</div>
+{% endif %}
+</div>
+</div>
+<div class="relative">
+<label class="block text-sm font-medium text-gray-700 mb-2" for="{{ form.weekly_goal.id_for_label }}">Weekly Goal</label>
+<div class="mt-1 relative rounded-md shadow-sm">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-gray-400 text-lg">flag</span>
+</div>
+{{ form.weekly_goal }}
+</div>
+{% if form.weekly_goal.errors %}
+<div class="text-red-500 text-sm mt-1">{{ form.weekly_goal.errors.0 }}</div>
+{% endif %}
+</div>
+<div class="pt-4">
+<button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-[#11d452] py-3 px-4 text-base font-semibold text-white shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#11d452] focus:ring-offset-2">
+                Continue
+              </button>
+</div>
+</form>
+</div>
+</main>
+</div>
+
+</body></html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Health Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11d452",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "foreground-light": "#0a130c",
+                        "foreground-dark": "#e8f4ec",
+                        "subtle-light": "#dce5de",
+                        "subtle-dark": "#203a28",
+                        "card-light": "#ffffff",
+                        "card-dark": "#182d1f",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-foreground-light dark:text-foreground-dark">
+<div class="relative flex min-h-screen w-full flex-col">
+{% include 'includes/header.html' %}
+<main class="flex-grow px-4 md:px-8 lg:px-16 py-8">
+<div class="max-w-7xl mx-auto">
+<section class="text-center py-12">
+<h2 class="text-4xl md:text-5xl font-black tracking-tighter">Your AI Health Dashboard</h2>
+<p class="mt-4 max-w-2xl mx-auto text-lg text-foreground-light/80 dark:text-foreground-dark/80">Access all your AI-powered health tools and view your saved results</p>
+<div class="mt-8 flex justify-center gap-4">
+<button class="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-base font-bold text-white shadow-lg transition-transform hover:scale-105">Explore Tools</button>
+<button class="inline-flex items-center justify-center rounded-lg bg-subtle-light dark:bg-subtle-dark px-6 py-3 text-base font-bold text-foreground-light dark:text-foreground-dark shadow-sm transition-transform hover:scale-105">View Results</button>
+</div>
+</section>
+<section class="py-12">
+<h3 class="text-2xl font-bold tracking-tight mb-8">AI-Powered Health Tools</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md overflow-hidden flex flex-col">
+<img alt="Diet Planning" class="h-48 w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlI5TqaAcuzXYPT9yaJcp8WjJgurvHeUzOGmiJYJ4rkJ1MHdR0Rs6BwtCrgszLyDiESCd-OPproPg7mlpnU_6_iTR8-yKlT19qt5Bt--fK59oI7l0m3lBwZo9mS3zwzGMueQpHIPvI7TZk0pVwWxP6l1e-FlxVCkQNELovzj-avm69fElPix-puayqr2wc-6WdhQ9CV_Vzb2bLESu2OMwzKJLqLadWAJj7x1KEQs5VYKR_yWozQZ9cdGDJB025tyf56WLfQ26nI5wL"/>
+<div class="p-6 flex-grow flex flex-col">
+<h4 class="text-lg font-bold">Smart Diet Planning</h4>
+<p class="mt-2 text-sm text-foreground-light/80 dark:text-foreground-dark/80 flex-grow">Create personalized diet plans tailored to your health goals and preferences.</p>
+<div class="mt-4 text-xs text-foreground-light/60 dark:text-foreground-dark/60 flex items-center justify-between">
+<span>~5 min</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base text-primary">star</span>
+<span>4.9 (2k+)</span>
+</div>
+</div>
+<a href="{% url 'diet_plan' %}" class="mt-4 w-full rounded-lg bg-primary/20 dark:bg-primary/30 py-2 text-sm font-bold text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors inline-block text-center">Create Diet Plan</a>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md overflow-hidden flex flex-col">
+<img alt="Workout Generator" class="h-48 w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0TD6gmA0O6bfXCmj8J6kPjCjpc6oR9M68FMEAIclZaynusTbDLj2J6NcA4gsmiy08Gre6gud9DtoBFBa4ATqZkVqNtEAdffnWlXfquHI4tKfsV3c-prOY4T6bd8i7Hn-CT8KvtZSl-Ihnn_pUog_6Ug0uOn2csxrG3WW8lS-cM7ALdWeSLNvl60p39H2pqRVPMJuV1j4zJIx50ypKeIajjBVBWPnrNhCkgdKh-htXdhCYbBXiI-tNUj8J6tf-a0QtU1RqjSGC4nDv"/>
+<div class="p-6 flex-grow flex flex-col">
+<h4 class="text-lg font-bold">Intelligent Workout Generator</h4>
+<p class="mt-2 text-sm text-foreground-light/80 dark:text-foreground-dark/80 flex-grow">Generate customized workout routines based on your fitness level and objectives.</p>
+<div class="mt-4 text-xs text-foreground-light/60 dark:text-foreground-dark/60 flex items-center justify-between">
+<span>~2 min</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base text-primary">star</span>
+<span>4.8 (1.5k+)</span>
+</div>
+</div>
+<a href="{% url 'workout_plan' %}" class="mt-4 w-full rounded-lg bg-primary/20 dark:bg-primary/30 py-2 text-sm font-bold text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors inline-block text-center">Generate Workout</a>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md overflow-hidden flex flex-col">
+<img alt="Weight Prediction" class="h-48 w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWBZbDEFiN5q47Ui818J4HnSYygPLXuKIHTYbeZWJjAQFSQT5HKlMcx2w5_xHMT5kw21oPAZn0BsFC_T1kgacPkr0CjO1CNYdOG7gArYZhh326vTYdxv-lIXZGA82KGM6M8qmqxcD2hjMgQDCrf7gUGvOwTl2DeFqeqPESWVIU_F9B_N0o8tpGOaPKJKnUjsoto96f3SctBXw_XP1bqH2FdPyLqDdFkUV2Px07KLgSCh35I0IvVy7kXu4nMCq1oVqwHTjSVS1aEa8J"/>
+<div class="p-6 flex-grow flex flex-col">
+<h4 class="text-lg font-bold">Weight Change Prediction</h4>
+<p class="mt-2 text-sm text-foreground-light/80 dark:text-foreground-dark/80 flex-grow">Predict your weight change over time with our advanced AI model.</p>
+<div class="mt-4 text-xs text-foreground-light/60 dark:text-foreground-dark/60 flex items-center justify-between">
+<span>~1 min</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base text-primary">star</span>
+<span>4.7 (900+)</span>
+</div>
+</div>
+<a href="{% url 'predict_weight_change' %}" class="mt-4 w-full rounded-lg bg-primary/20 dark:bg-primary/30 py-2 text-sm font-bold text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors inline-block text-center">Predict Weight Change</a>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md overflow-hidden flex flex-col">
+<img alt="Calorie Calculator" class="h-48 w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwDnA5v3-Ws2q1QVaxDXtobecJlaNXUJMuI9gCsJDw9prS9fds10v5xM7eMYjCGTgNlfmXKH8gRG-RWTw9b7NJKOfpiHKtEz4PVop88bTOtMti8Iq3nqXficv1eTtl7RZDqWw8Qlq9grvqpSEXu7ikJXC96iQ6yeS2ZuIQzD_k3Nhj-_FVes4k51OMD7dUz9XE1swZl2_FxW70Wu6rjoQ7MBh8mvBaqy27chbUF_2WXdiByjLZTIvdERfLtG9T6xmOEjcW8pFQWT4S"/>
+<div class="p-6 flex-grow flex flex-col">
+<h4 class="text-lg font-bold">Calorie Burn Calculator</h4>
+<p class="mt-2 text-sm text-foreground-light/80 dark:text-foreground-dark/80 flex-grow">Calculate your daily calorie needs and track your progress.</p>
+<div class="mt-4 text-xs text-foreground-light/60 dark:text-foreground-dark/60 flex items-center justify-between">
+<span><1 min</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base text-primary">star</span>
+<span>4.9 (3k+)</span>
+</div>
+</div>
+<a href="{% url 'calories_burnt_predictor' %}" class="mt-4 w-full rounded-lg bg-primary/20 dark:bg-primary/30 py-2 text-sm font-bold text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors inline-block text-center">Calculate Calories</a>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md overflow-hidden flex flex-col">
+<img alt="Food Recognition" class="h-48 w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN56s-4KWbIDEZN5oFePzzONwl4u6aRBw-PhuyEqvdJLkDg_W2fbMe16wxLGa4nDwN07PtadNq5OvVsy1ewiomtmVJZwlr2FIwP_NC-M9ILdlnRkQ42Drv4Aq3xaYKQksKHrLhT5cbZkFtE-ZrAWxA9nI6GW2_FELzyiZ51rDMVuYBPocuniIyuQASeryovdxw5RzQJ1En94r0jzmvYavGoAmOP-YxnJZIy4BPxkDvdAnjUBZATem5yKz4EfL9zddCpEnJtHNyGrjG"/>
+<div class="p-6 flex-grow flex flex-col">
+<h4 class="text-lg font-bold">AI Food Recognition</h4>
+<p class="mt-2 text-sm text-foreground-light/80 dark:text-foreground-dark/80 flex-grow">Analyze your food intake with our AI-powered food recognition technology.</p>
+<div class="mt-4 text-xs text-foreground-light/60 dark:text-foreground-dark/60 flex items-center justify-between">
+<span>~3 min</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base text-primary">star</span>
+<span>4.6 (1.1k+)</span>
+</div>
+</div>
+<a href="{% url 'food_recognition' %}" class="mt-4 w-full rounded-lg bg-primary/20 dark:bg-primary/30 py-2 text-sm font-bold text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors inline-block text-center">Analyze Food</a>
+</div>
+</div>
+</div>
+</section>
+<section class="py-12">
+<h3 class="text-2xl font-bold tracking-tight mb-6">Saved Results</h3>
+<div class="border-b border-subtle-light dark:border-subtle-dark flex items-center gap-8 mb-6">
+<a class="py-3 border-b-2 border-primary text-primary font-semibold text-sm" href="{% url 'saved_results' %}">All Time</a>
+<a class="py-3 border-b-2 border-transparent text-foreground-light/60 dark:text-foreground-dark/60 hover:text-primary hover:border-primary transition-all text-sm font-semibold" href="{% url 'saved_results' %}">Personal</a>
+<a class="py-3 border-b-2 border-transparent text-foreground-light/60 dark:text-foreground-dark/60 hover:text-primary hover:border-primary transition-all text-sm font-semibold" href="{% url 'saved_results' %}">Track Progress</a>
+</div>
+<div class="text-center bg-card-light dark:bg-card-dark p-8 rounded-lg">
+<p class="text-foreground-light/80 dark:text-foreground-dark/80">View all your saved AI predictions and results.</p>
+<a href="{% url 'saved_results' %}" class="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105">View Your Saved Results</a>
+</div>
+</section>
+<section class="py-12">
+<h3 class="text-2xl font-bold tracking-tight mb-8">Check Your Health Status</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md overflow-hidden flex flex-col md:flex-row items-stretch">
+<img alt="Heart Health" class="h-48 md:h-auto md:w-48 w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMyBav1ecCre8K2Poit_DIpS0CLupIQtHE5uUom6LwX-z7tBaf7cfGhtAAlaSfyWlf8fAJbZCFjz7TCc8g1t9CbmFS7oiqkepUFe5k9ysZuq99YHe1-NAnlE_qjaiKAQ9CvPKxktSkvVNazR9scDpYcvrJOnY0OJ9Qq-8iJH6dIVIPrebAWi6b1u7Wzf1suQWJ7ZqVgUTMOcGRkTIEiOAfnZ0beGjzkJiSkL4C5qP9zy-gYf27RvZCKNuzTAHXJPq3ByVqBxT8qm-K"/>
+<div class="p-6 flex flex-col justify-between">
+<div>
+<h4 class="text-lg font-bold">Heart Disease Risk Assessment</h4>
+<p class="mt-2 text-sm text-foreground-light/80 dark:text-foreground-dark/80">Assess your risk of heart disease with our AI-powered tool.</p>
+</div>
+<a href="{% url 'heart_disease_page' %}" class="mt-4 w-full md:w-auto rounded-lg bg-primary/20 dark:bg-primary/30 px-4 py-2 text-sm font-bold text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors inline-block text-center">Check Heart Health</a>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md overflow-hidden flex flex-col md:flex-row items-stretch">
+<img alt="Lung Health" class="h-48 md:h-auto md:w-48 w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA0zaV-ve_V--N4WCSiegZkhEH6uMmSbCvCiy_HifjrlS69kWFxA4Ezd5exnU7EMet950cWEi7qfYRnKDKK7ACJ9C3fq2xavJsznRpFNeUtQ3nPYQE-IBled-ceT6Dm0KyVRqnqBwTtd1enbzI8Nvh4Pn-RwsGFS1f7S6RBLMMNvk1Mx9W_xv67XXzNrj2TKUFZkZTZVy0qeDrkToLpElfMP6EJyse9SNn9ud6aks3d_Vh5sA2Pm2U8uHl7AcWCvPYFcd5cfaHYgWe"/>
+<div class="p-6 flex flex-col justify-between">
+<div>
+<h4 class="text-lg font-bold">Lung Disease Risk Assessment</h4>
+<p class="mt-2 text-sm text-foreground-light/80 dark:text-foreground-dark/80">Evaluate your risk of lung disease with our advanced AI analysis.</p>
+</div>
+<a href="{% url 'lung_disease_page' %}" class="mt-4 w-full md:w-auto rounded-lg bg-primary/20 dark:bg-primary/30 px-4 py-2 text-sm font-bold text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors inline-block text-center">Check Lung Health</a>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer class="border-t border-subtle-light dark:border-subtle-dark">
+<div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-6 text-center text-sm text-foreground-light/60 dark:text-foreground-dark/60">
+<p>© 2024 HealthAI. All rights reserved.</p>
+</div>
+</footer>
+</div>
+
+</body></html>

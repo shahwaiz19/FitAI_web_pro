@@ -1,0 +1,56 @@
+<!-- Shared Header Component for Consistent Branding -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-subtle-light dark:border-subtle-dark bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm px-4 md:px-8 lg:px-16 py-3">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 text-primary">
+            {% if brand.brand_logo_svg %}
+                {{ brand.brand_logo_svg|safe }}
+            {% else %}
+                <i class="{{ brand.brand_icon_class }}"></i>
+            {% endif %}
+        </div>
+        <h1 class="text-xl font-bold tracking-tighter">{{ brand.brand_name }}</h1>
+    </div>
+
+    <nav class="hidden lg:flex items-center gap-6 text-sm font-medium">
+        <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'landing' %}">Home</a>
+        {% if is_authenticated %}
+            <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'dashboard' %}">Dashboard</a>
+            <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'saved_results' %}">Saved Results</a>
+        {% endif %}
+        <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'diet_plan' %}">Diet Plans</a>
+        <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'workout_plan' %}">Workouts</a>
+        <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'predict_weight_change' %}">Weight Prediction</a>
+        <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'food_recognition' %}">Food Recognition</a>
+        <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'heart_disease_page' %}">Health Assessment</a>
+    </nav>
+
+    <div class="flex items-center gap-4">
+        {% if is_authenticated %}
+            <a href="{% url 'profile' %}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <img alt="User avatar" class="w-10 h-10 rounded-full object-cover border-2 border-primary/20"
+                     src="{{ user_profile_pic_url }}"
+                     onerror="this.src='{{ STATIC_URL }}images/default-avatar.svg'"
+                     loading="lazy">
+                {% if user_display_name %}
+                    <span class="hidden md:block text-sm font-medium text-foreground-light dark:text-foreground-dark">
+                        {{ user_display_name|truncatechars:15 }}
+                    </span>
+                {% endif %}
+            </a>
+            <a href="{% url 'logout' %}" class="inline-flex items-center justify-center rounded-lg bg-red-500/10 dark:bg-red-500/20 px-3 py-2 text-sm font-bold text-red-600 dark:text-red-400 hover:bg-red-500/20 dark:hover:bg-red-500/30 transition-colors">
+                Logout
+            </a>
+        {% else %}
+            <a class="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105" href="{% url 'login' %}">
+                Login
+            </a>
+            <a class="inline-flex items-center justify-center rounded-lg border border-primary px-4 py-2 text-sm font-bold text-primary hover:bg-primary hover:text-white transition-colors" href="{% url 'onboarding_welcome' %}">
+                Get Started
+            </a>
+        {% endif %}
+
+        <button class="lg:hidden p-2">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+    </div>
+</header>

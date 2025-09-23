@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Saved Results - HealthAI</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11d452",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "foreground-light": "#0a130c",
+                        "foreground-dark": "#e8f4ec",
+                        "subtle-light": "#dce5de",
+                        "subtle-dark": "#203a28",
+                        "card-light": "#ffffff",
+                        "card-dark": "#182d1f",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-foreground-light dark:text-foreground-dark">
+<div class="relative flex min-h-screen w-full flex-col">
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-subtle-light dark:border-subtle-dark bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm px-4 md:px-8 lg:px-16 py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path></svg>
+</div>
+<h1 class="text-xl font-bold tracking-tighter">HealthAI</h1>
+</div>
+<nav class="hidden lg:flex items-center gap-6 text-sm font-medium">
+<a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'landing' %}">Home</a>
+<a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'dashboard' %}">Dashboard</a>
+<a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="#">Health Status</a>
+<a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="#">Suggestions</a>
+<a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="#">Diet Plans</a>
+<a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="#">Workouts</a>
+</nav>
+<div class="flex items-center gap-4">
+<a href="{% url 'profile' %}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+<img alt="User avatar" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpEqcuY1JyxbM2S3E35Lb4yOPhB8-2EZXhv036qZ1oj9_o5I7BSNzc4Hws2IXsnydxBPkKfxs35ZHf_1jlOuirb382Cvz9PgRE5I82cfB_vTK-q4d7RJullSBSUSIFOk3E2xPH-QFO4X_O7E6BIQbhNMtjV91Dbyr7GnCd3HOlqPZYRXS4qUKwX1JVzJJ4g5I-TphHD8Qr6h-NWd9WjrLLgjoXEFj35BowLNKniVUV_vD-Ff0JZYxIJGutDTUbLRO-Nxad04sq9L30"/>
+</a>
+<button class="lg:hidden p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-grow px-4 md:px-8 lg:px-16 py-8">
+<div class="max-w-7xl mx-auto">
+<section class="text-center py-12">
+<h2 class="text-4xl md:text-5xl font-black tracking-tighter">Your Saved Results</h2>
+<p class="mt-4 max-w-2xl mx-auto text-lg text-foreground-light/80 dark:text-foreground-dark/80">View all your AI-powered health predictions and results in one place</p>
+</section>
+
+<!-- Diet Plans -->
+{% if diet_plans %}
+<section class="py-12">
+<h3 class="text-2xl font-bold tracking-tight mb-8">Diet Plans</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for plan in diet_plans %}
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6 flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+            <span class="material-symbols-outlined text-primary">restaurant</span>
+            <h4 class="text-lg font-bold">{{ plan.preference|title }} Diet</h4>
+        </div>
+        <div class="space-y-2 mb-4">
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Calories: <span class="font-semibold text-primary">{{ plan.required_calories }}</span></p>
+            <div class="text-sm text-foreground-light/60 dark:text-foreground-dark/60">
+                <p><strong>Breakfast:</strong> {{ plan.breakfast|truncatechars:80 }}</p>
+                <p><strong>Lunch:</strong> {{ plan.lunch|truncatechars:80 }}</p>
+                <p><strong>Dinner:</strong> {{ plan.dinner|truncatechars:80 }}</p>
+            </div>
+        </div>
+        <p class="text-xs text-foreground-light/50 dark:text-foreground-dark/50 mt-auto">Created: {{ plan.created_at|date:"M d, Y H:i" }}</p>
+    </div>
+    {% endfor %}
+</div>
+</section>
+{% endif %}
+
+<!-- Workout Plans -->
+{% if workout_plans %}
+<section class="py-12">
+<h3 class="text-2xl font-bold tracking-tight mb-8">Workout Plans</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for plan in workout_plans %}
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6 flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+            <span class="material-symbols-outlined text-primary">fitness_center</span>
+            <h4 class="text-lg font-bold">Workout Plan</h4>
+        </div>
+        <div class="space-y-2 mb-4">
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Target Calories: <span class="font-semibold text-primary">{{ plan.calories_burned }}</span></p>
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Age: {{ plan.age }}, Gender: {{ plan.gender }}</p>
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Weight: {{ plan.weight }}kg, Height: {{ plan.height }}cm</p>
+            <div class="text-sm text-foreground-light/60 dark:text-foreground-dark/60">
+                <p>{{ plan.workout_plan|truncatechars:150 }}</p>
+            </div>
+        </div>
+        <p class="text-xs text-foreground-light/50 dark:text-foreground-dark/50 mt-auto">Created: {{ plan.created_at|date:"M d, Y H:i" }}</p>
+    </div>
+    {% endfor %}
+</div>
+</section>
+{% endif %}
+
+<!-- Weight Predictions -->
+{% if weight_predictions %}
+<section class="py-12">
+<h3 class="text-2xl font-bold tracking-tight mb-8">Weight Predictions</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for prediction in weight_predictions %}
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6 flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+            <span class="material-symbols-outlined text-primary">monitoring</span>
+            <h4 class="text-lg font-bold">Weight Change Prediction</h4>
+        </div>
+        <div class="space-y-2 mb-4">
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Current Weight: <span class="font-semibold">{{ prediction.current_weight }}kg</span></p>
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Predicted Change: <span class="font-semibold text-primary">{{ prediction.weight_change_kg }}kg</span></p>
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Duration: {{ prediction.duration_weeks }} weeks</p>
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Activity Level: {{ prediction.physical_activity_level|title }}</p>
+        </div>
+        <p class="text-xs text-foreground-light/50 dark:text-foreground-dark/50 mt-auto">Created: {{ prediction.created_at|date:"M d, Y H:i" }}</p>
+    </div>
+    {% endfor %}
+</div>
+</section>
+{% endif %}
+
+<!-- Calorie Calculations -->
+{% if calorie_calculations %}
+<section class="py-12">
+<h3 class="text-2xl font-bold tracking-tight mb-8">Calorie Calculations</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for calc in calorie_calculations %}
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6 flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+            <span class="material-symbols-outlined text-primary">calculate</span>
+            <h4 class="text-lg font-bold">Calorie Burn Calculation</h4>
+        </div>
+        <div class="space-y-2 mb-4">
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Age: {{ calc.age }}, Height: {{ calc.height }}cm</p>
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Weight: {{ calc.actual_weight }}kg</p>
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Calories Burned: <span class="font-semibold text-primary">{{ calc.calories_burned }}</span></p>
+        </div>
+        <p class="text-xs text-foreground-light/50 dark:text-foreground-dark/50 mt-auto">Created: {{ calc.created_at|date:"M d, Y H:i" }}</p>
+    </div>
+    {% endfor %}
+</div>
+</section>
+{% endif %}
+
+<!-- Food Recognitions -->
+{% if food_recognitions %}
+<section class="py-12">
+<h3 class="text-2xl font-bold tracking-tight mb-8">Food Recognitions</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for food in food_recognitions %}
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6 flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+            <span class="material-symbols-outlined text-primary">restaurant_menu</span>
+            <h4 class="text-lg font-bold">{{ food.recognized_food }}</h4>
+        </div>
+        <div class="space-y-2 mb-4">
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Calories: <span class="font-semibold text-primary">{{ food.calories }}</span></p>
+            {% if food.protein %}
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Protein: {{ food.protein }}g</p>
+            {% endif %}
+            {% if food.carbs %}
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Carbs: {{ food.carbs }}g</p>
+            {% endif %}
+            {% if food.fat %}
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Fat: {{ food.fat }}g</p>
+            {% endif %}
+        </div>
+        <p class="text-xs text-foreground-light/50 dark:text-foreground-dark/50 mt-auto">Created: {{ food.created_at|date:"M d, Y H:i" }}</p>
+    </div>
+    {% endfor %}
+</div>
+</section>
+{% endif %}
+
+<!-- Health Assessments -->
+{% if health_assessments %}
+<section class="py-12">
+<h3 class="text-2xl font-bold tracking-tight mb-8">Health Assessments</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {% for assessment in health_assessments %}
+    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6 flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+            <span class="material-symbols-outlined text-primary">
+                {% if assessment.assessment_type == 'heart_disease' %}favorite{% else %}lungs{% endif %}
+            </span>
+            <h4 class="text-lg font-bold">{{ assessment.assessment_type|title }} Assessment</h4>
+        </div>
+        <div class="space-y-2 mb-4">
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Risk Level:
+                <span class="{% if assessment.risk_level == 'high' %}text-red-500{% elif assessment.risk_level == 'medium' %}text-yellow-500{% else %}text-green-500{% endif %} font-semibold">
+                    {{ assessment.risk_level|title }}
+                </span>
+            </p>
+            <p class="text-foreground-light/80 dark:text-foreground-dark/80">Probability: <span class="font-semibold">{{ assessment.probability }}%</span></p>
+            <div class="text-sm text-foreground-light/60 dark:text-foreground-dark/60">
+                <p><strong>Recommendations:</strong> {{ assessment.recommendations|truncatechars:120 }}</p>
+            </div>
+        </div>
+        <p class="text-xs text-foreground-light/50 dark:text-foreground-dark/50 mt-auto">Created: {{ assessment.created_at|date:"M d, Y H:i" }}</p>
+    </div>
+    {% endfor %}
+</div>
+</section>
+{% endif %}
+
+<!-- Empty State -->
+{% if not diet_plans and not workout_plans and not weight_predictions and not calorie_calculations and not food_recognitions and not health_assessments %}
+<section class="py-12">
+<div class="text-center bg-card-light dark:bg-card-dark p-12 rounded-xl shadow-md">
+    <span class="material-symbols-outlined text-6xl text-foreground-light/30 dark:text-foreground-dark/30 mb-4">analytics</span>
+    <h3 class="text-2xl font-bold mb-4">No Saved Results Yet</h3>
+    <p class="text-foreground-light/80 dark:text-foreground-dark/80 mb-6">Start using our AI tools to see your predictions and results here!</p>
+    <a href="{% url 'dashboard' %}" class="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-base font-bold text-white shadow-lg transition-transform hover:scale-105">
+        <span class="material-symbols-outlined mr-2">dashboard</span>
+        Go to Dashboard
+    </a>
+</div>
+</section>
+{% endif %}
+</div>
+</main>
+<footer class="border-t border-subtle-light dark:border-subtle-dark">
+<div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-6 text-center text-sm text-foreground-light/60 dark:text-foreground-dark/60">
+<p>© 2024 HealthAI. All rights reserved.</p>
+</div>
+</footer>
+</div>
+</body></html>

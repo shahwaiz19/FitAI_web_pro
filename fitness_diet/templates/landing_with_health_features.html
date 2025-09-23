@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FitAI - AI-Powered Fitness and Diet Assistant</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+        :root {
+            --primary-color: #11d452;
+            --secondary-color: #f8fcf9;
+            --text-primary: #0d1b12;
+            --text-secondary: #4c9a66;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .feature-slide {
+            display: none;
+        }
+        .feature-slide.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .health-card {
+            transition: all 0.3s ease;
+        }
+        .health-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(17, 212, 82, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+<div class="relative flex size-full min-h-screen flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-sm">
+<div class="container mx-auto flex items-center justify-between px-6 py-4">
+<a class="flex items-center gap-3 text-2xl font-bold text-[var(--text-primary)]" href="{% url 'landing' %}">
+<span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">fitness_center</span> FitAI
+                </a>
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="hover:text-[var(--primary-color)] transition-colors" href="#features">Features</a>
+<a class="hover:text-[var(--primary-color)] transition-colors" href="#health">Health</a>
+<a class="hover:text-[var(--primary-color)] transition-colors" href="#testimonials">Testimonials</a>
+</nav>
+<div class="hidden md:flex items-center space-x-1">
+<a class="inline-flex items-center justify-center rounded-md bg-[var(--primary-color)] px-5 py-2.5 text-sm font-semibold text-[var(--text-primary)] shadow-sm transition-transform hover:scale-105" href="{% url 'onboarding_welcome' %}">
+          Get Started
+        </a>
+<a class="inline-flex items-center justify-center rounded-md border border-[var(--primary-color)] px-5 py-2.5 text-sm font-semibold text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-[var(--text-primary)] transition-colors" href="{% url 'login' %}">
+          Login
+        </a>
+</div>
+<button class="md:hidden text-[var(--text-primary)]">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-grow">
+<section class="relative h-[600px] overflow-hidden text-center" id="hero">
+<div class="absolute inset-0 w-full h-full" id="image-slider">
+<div class="slider-item active h-full">
+<img alt="Fitness enthusiast working out" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4GA83a98SLvzMI7v2-OaHPwsVUsIZWJhbZJ4ypcpRaRtYQ-IsFV4KXsV1zkwXpJOrT8TNZHf9D4gd8Ub3b6WdIqh2daNovXwvC0UkCIiu2ErJ5VFiYlbby4gHElTYhGvp1HVV2dG1tPCQcBGatLhNYX-j-KjehYTXzi2OtHvN7GmLK8RnDWYoBEIW6QTLYfWu0fKGt9et3LieGOV_ZYDPDDLsB2xjDWegMUP4GL_hsIS5skUpU8QpRU5ucg5VwCQ0jAH3DZ2KDOBq"/>
+</div>
+<div class="slider-item h-full">
+<img alt="Healthy and nutritious meal" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF5C5BYDBjx54A8NMaNSglzvw3iBvnLeYG2JdgYRO4AEtAxhTmY7WURHrwb5sXBPKwywRTTUwHaCGYrFOAIF6JQvwD86FTi4-ve3-l-W5xjsqV03i6U6nHY9i_0oNxUPBiY1LgqZp9N8vApz398U5UYjc9pm5Bbn4gAzLAQIdfWd3SphWXWS0zhTZvJMxft6ecFrgsznbbbsYtbQwooc3_Z0PJTQoz89Qu2-puMWWI22blaU6rXH-pnDSI5rUNcDfyKxWWI30fuFu5"/>
+</div>
+<div class="slider-item h-full">
+<img alt="Person tracking fitness progress on a smartphone" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1rGlt4J6z9K0MgushDSx3kl8QVVR6R7QahKuwE7KOqW4-Evgbriltgv08KS-pDxLK7xZRC5RMrimMkQEDXnXyzla1YJE_SDOjozrREbrWVSHZQX946jrgM2N0OHWBLyBKF02pglPZGkH72YBBQyvERuXlSJm1T8orEm4TTSxG2PyHpUxnSSm4WvgGBzUQJCsmKY01zxwGyFLNxuznnLPYNl9_TyM9tcIVZSnQS12gVhtLX18ZnS2tlpkiJixT-HQhYwliJM2maL3O"/>
+</div>
+</div>
+<div class="absolute inset-0 bg-black/50"></div>
+<div class="relative container mx-auto px-6 h-full flex flex-col justify-center items-center fade-in">
+<h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight tracking-tighter">
+            Your AI-Powered Fitness and Diet Assistant
+          </h1>
+<p class="mt-4 text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
+                        Achieve your health goals with personalized plans, smart tracking, and expert guidance.
+                    </p>
+<a class="mt-8 inline-flex items-center justify-center rounded-md bg-[var(--primary-color)] px-8 py-3 text-lg font-semibold text-[var(--text-primary)] shadow-lg transition-transform hover:scale-105" href="{% url 'onboarding_welcome' %}">
+            Get Started for Free
+          </a>
+</div>
+</section>
+<section class="py-20 bg-[var(--secondary-color)] fade-in" id="features">
+<div class="container mx-auto px-6 text-center">
+<h2 class="text-3xl md:text-4xl font-bold text-[var(--text-primary)]">Key Features</h2>
+<p class="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
+                        Our AI-powered platform offers a range of features to help you achieve your fitness and diet goals.
+                    </p>
+
+<!-- Feature Slider -->
+<div class="mt-12 relative">
+<div class="flex justify-center items-center space-x-4 mb-8">
+<button id="prev-feature" class="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow">
+<span class="material-symbols-outlined text-[var(--primary-color)]">chevron_left</span>
+</button>
+
+<div class="flex space-x-2">
+<span id="feature-dot-0" class="w-3 h-3 rounded-full bg-[var(--primary-color)] cursor-pointer"></span>
+<span id="feature-dot-1" class="w-3 h-3 rounded-full bg-gray-300 cursor-pointer"></span>
+<span id="feature-dot-2" class="w-3 h-3 rounded-full bg-gray-300 cursor-pointer"></span>
+<span id="feature-dot-3" class="w-3 h-3 rounded-full bg-gray-300 cursor-pointer"></span>
+<span id="feature-dot-4" class="w-3 h-3 rounded-full bg-gray-300 cursor-pointer"></span>
+</div>
+
+<button id="next-feature" class="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow">
+<span class="material-symbols-outlined text-[var(--primary-color)]">chevron_right</span>
+</button>
+</div>
+
+<div class="relative overflow-hidden">
+<!-- Feature Slide 1 -->
+<div id="feature-slide-0" class="feature-slide active">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<a href="{% url 'food_recognition' %}" class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2 hover:shadow-lg">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">photo_camera</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Food Recognition + Calories Tracking</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Identify food from images and track calories burnt with USDA API integration for accuracy.</p>
+</a>
+<a href="{% url 'calories_burnt_predictor' %}" class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2 hover:shadow-lg">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">monitoring</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Calories Burnt</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Track your calories burnt during workouts with our AI-powered model for accuracy.</p>
+</a>
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<a href="{% url 'diet_plan' %}" class="text-inherit no-underline">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">restaurant_menu</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">AI Diet Plan Generator</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Get personalized meal plans based on your calorie needs and dietary preferences.</p>
+</a>
+</div>
+</div>
+</div>
+
+<!-- Feature Slide 2 -->
+<div id="feature-slide-1" class="feature-slide">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<a href="{% url 'heart_disease_page' %}" class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2 hover:shadow-lg">
+<span class="material-symbols-outlined text-5xl text-red-500 mb-4">favorite</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Heart Disease Prediction</h3>
+<p class="mt-2 text-[var(--text-secondary)]">AI-powered heart health assessment using machine learning to analyze your risk factors.</p>
+</a>
+<a href="{% url 'lung_disease_page' %}" class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2 hover:shadow-lg">
+<span class="material-symbols-outlined text-5xl text-blue-500 mb-4">lungs</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Lung Disease Prediction</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Advanced AI analysis for respiratory health and lung disease detection.</p>
+</a>
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">analytics</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Health Analytics</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Comprehensive health insights and predictive analytics for better wellness.</p>
+</div>
+</div>
+</div>
+
+<!-- Feature Slide 3 -->
+<div id="feature-slide-2" class="feature-slide">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">fitness_center</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Workout Plans</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Customized exercise routines based on your fitness level and goals.</p>
+</div>
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">restaurant_menu</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Meal Planning</h3>
+<p class="mt-2 text-[var(--text-secondary)]">AI-generated meal plans that fit your dietary preferences and restrictions.</p>
+</div>
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">insights</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Progress Tracking</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Monitor your fitness journey with detailed analytics and progress reports.</p>
+</div>
+</div>
+</div>
+
+<!-- Feature Slide 4 -->
+<div id="feature-slide-3" class="feature-slide">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">group</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Community Support</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Connect with like-minded individuals on their fitness journey.</p>
+</div>
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">smartphone</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Mobile App</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Access your fitness data anytime, anywhere with our mobile application.</p>
+</div>
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">support</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Expert Guidance</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Get advice from certified fitness trainers and nutritionists.</p>
+</div>
+</div>
+</div>
+
+<!-- Feature Slide 5 -->
+<div id="feature-slide-4" class="feature-slide">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">schedule</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Smart Scheduling</h3>
+<p class="mt-2 text-[var(--text-secondary)]">AI-optimized workout and meal timing for maximum effectiveness.</p>
+</div>
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">science</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Research-Based</h3>
+<p class="mt-2 text-[var(--text-secondary)]">All recommendations backed by scientific research and studies.</p>
+</div>
+<div class="flex flex-col items-center p-8 bg-white rounded-lg shadow-md transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)] mb-4">security</span>
+<h3 class="text-xl font-bold text-[var(--text-primary)]">Privacy First</h3>
+<p class="mt-2 text-[var(--text-secondary)]">Your health data is secure and never shared without permission.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 fade-in" id="health">
+<div class="container mx-auto px-6">
+<div class="text-center mb-12">
+<h2 class="text-3xl md:text-4xl font-bold text-[var(--text-primary)]">Advanced Health Monitoring</h2>
+<p class="mt-4 text-lg text-[var(--text-secondary)] max-w-3xl mx-auto">
+                    Take control of your health with our AI-powered disease prediction tools. Early detection and prevention are key to a healthy life.
+                </p>
+</div>
+
+<div class="grid md:grid-cols-2 gap-12 items-center">
+<div class="space-y-8">
+<div class="health-card bg-white p-8 rounded-xl shadow-lg">
+<div class="flex items-center mb-6">
+<div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-3xl text-red-600">favorite</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-[var(--text-primary)]">Heart Disease Prediction</h3>
+<p class="text-[var(--text-secondary)]">Advanced AI analysis of cardiovascular risk factors</p>
+</div>
+</div>
+<p class="text-gray-600 mb-6">Our machine learning model analyzes 13+ health parameters including age, blood pressure, cholesterol levels, and ECG results to predict heart disease risk with high accuracy.</p>
+<a href="{% url 'heart_disease_page' %}" class="inline-flex items-center text-[var(--primary-color)] font-semibold hover:underline">
+                    Start Heart Health Assessment <span class="material-symbols-outlined ml-1">arrow_forward</span>
+</a>
+</div>
+
+<div class="health-card bg-white p-8 rounded-xl shadow-lg">
+<div class="flex items-center mb-6">
+<div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-3xl text-blue-600">lungs</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-[var(--text-primary)]">Lung Disease Prediction</h3>
+<p class="text-[var(--text-secondary)]">Comprehensive respiratory health evaluation</p>
+</div>
+</div>
+<p class="text-gray-600 mb-6">AI-powered assessment of lung health considering smoking habits, environmental factors, allergies, and respiratory symptoms for early disease detection.</p>
+<a href="{% url 'lung_disease_page' %}" class="inline-flex items-center text-[var(--primary-color)] font-semibold hover:underline">
+                    Start Lung Health Assessment <span class="material-symbols-outlined ml-1">arrow_forward</span>
+</a>
+</div>
+</div>
+
+<div class="text-center">
+<img alt="AI Health Monitoring" class="rounded-lg shadow-xl w-full max-w-lg mx-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU4WNnL6Qi2yBHRYyacYEuZy7KiCe11kcV8tq-DNzVYRJqPEd3TUJtJvTgHhmPtIxrm_Q600CVSzfv6HlFYAfjKk-VSTcLvhcMqdNRaJFIN_ON-6V-CeNYPi0Z5BXmNzplULIpSUslYxFIojhopDiwErg0T9rejqB8fslAJhTPp14sJgdJRDpeBBeoc3YM-uUZhXfLeeGPoAA_XqjQ6e6CyECTIr29NCIZ4euwhdbmhTTQmiKlxt9K3zZV2cHfswDrRl_i3QvCxnEc"/>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 bg-[var(--secondary-color)] fade-in" id="testimonials">
+<div class="container mx-auto px-6">
+<h2 class="text-3xl md:text-4xl font-bold text-center text-[var(--text-primary)]">Success Stories</h2>
+<div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="bg-white p-6 rounded-lg shadow-md">
+<div class="flex items-center mb-4">
+<img alt="Sophia Clark" class="size-12 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW4gK9b5cR8RWHRkOq_dRpcTpRBeysRnE5m0UuO0Pnf5MlUm8y_mQmRx6AtZEvsXcRURr8-i8R3pJDguJ_WHKdorGrvd8jMLUBKQdVSkyTPdVKsvbN2u6YR-MBuBTpCfHX7Bx83XowJ1qVpNoSwf7qTuM7ydRb9ZqedUFc9plvsUJrTinfPcyEW6vkhgrmmCvA78ZCL1msFK3NA5EQoaiqPSbiTnyP2a2Hr7oKlKkyNvGg3GIvjBqnGtmGPO2YtVHBVCQdOjvk7Dam"/>
+<div>
+<p class="font-bold text-[var(--text-primary)]">Sophia Clark</p>
+<div class="flex text-[var(--primary-color)]">
+<span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span>
+</div>
+</div>
+</div>
+<p class="text-[var(--text-secondary)]">"FitAI has transformed my fitness journey. The personalized plans are easy to follow, and the food recognition feature is a game-changer!"</p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<div class="flex items-center mb-4">
+<img alt="Ethan Bennett" class="size-12 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5Vim0rbClMLWDnzJ_z0Kz71HZb3kC9sCTlC8a9dohG79TwQiu6OLw4ZtumQKt4fDTVnDao9S4_u4fLOTwSictyIu2LQSvmBWoySDCE63QjqQQ_Qjgln6pMYTimUg5MHV-G_vkit5U5qsqScBshHPZplpCuCH0d2IoNZgff9zdWG60XapdruKGizRhxCQNr31F6yONheukFjg417B8ppTp9weLp_b67IcA1eT9Y2itKswnqNE0nhveFdeWZm4o2_y-qOr5-aczfE63"/>
+<div>
+<p class="font-bold text-[var(--text-primary)]">Ethan Bennett</p>
+<div class="flex text-[var(--primary-color)]">
+<span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star_half</span>
+</div>
+</div>
+</div>
+<p class="text-[var(--text-secondary)]">"I've been using FitAI for a month, and I've already seen significant progress. The calorie tracking is accurate, and the support team is responsive."</p>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-md">
+<div class="flex items-center mb-4">
+<img alt="Olivia Carter" class="size-12 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCACkdavsG2xuhh9EA86cRhYJDDPPNi08Pnk4o82GYuDAhzDD8zT9u_eqhHkDjNvJkyVZs1Z-cqKdkSbj1MoIba0F_evvCpRrrn8T7C4lLsQv1V4g3nht3tPPqfOALM_2B4Cg_FMgeU1xG4OR23mwT2PXaHxxYC-Bl46Q4P-2V99m0M_a-5Rrin6LQTE89PEq95GqwCJ1mGhrW8csttM4HsCofbFjuuZKDOINtdQYz8dufSvw7X_-zNiTOi-ujrPC6E2t6-hf1nP4hI"/>
+<div>
+<p class="font-bold text-[var(--text-primary)]">Olivia Carter</p>
+<div class="flex text-[var(--primary-color)]">
+<span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span><span class="material-symbols-outlined text-sm">star</span>
+</div>
+</div>
+</div>
+<p class="text-[var(--text-secondary)]">"FitAI is the best fitness app I've ever used. The AI-powered recommendations are spot-on, and I love the community aspect."</p>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-[var(--secondary-color)] py-20 fade-in" id="get-started">
+<div class="container mx-auto px-6 text-center">
+<h2 class="text-3xl md:text-4xl font-bold text-[var(--text-primary)]">Ready to Transform Your Health?</h2>
+<p class="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">Join thousands of users who are achieving their fitness and diet goals with FitAI. The best part? It's completely free.</p>
+<a class="mt-8 inline-flex items-center justify-center rounded-md bg-[var(--primary-color)] px-8 py-3 text-lg font-semibold text-[var(--text-primary)] shadow-lg transition-transform hover:scale-105" href="{% url 'onboarding_welcome' %}">
+                Create Your Free Account
+            </a>
+</div>
+</section>
+</main>
+<footer class="bg-gray-800 text-white">
+<div class="container mx-auto px-6 py-12">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<a class="flex items-center gap-3 text-2xl font-bold" href="#">
+<span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">fitness_center</span> FitAI
+                    </a>
+<div class="flex mt-6 md:mt-0 gap-6">
+<a class="hover:text-[var(--primary-color)] transition-colors" href="#">About Us</a>
+<a class="hover:text-[var(--primary-color)] transition-colors" href="#">Contact</a>
+<a class="hover:text-[var(--primary-color)] transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-[var(--primary-color)] transition-colors" href="#">Terms of Service</a>
+</div>
+<div class="flex mt-6 md:mt-0 gap-4">
+<a class="text-gray-400 hover:text-white transition-colors" href="#"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.48 2.96,10.29 2.38,10V10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16.03 6.02,17.25 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z"></path></svg></a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M17,17H14V12H17V17M17,11H14V9H17V11M7,17H10V12H7V17M7,11H10V9H7V11Z"></path></svg></a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.2,5.2 0 0,1 16.2,21.4H7.8C4.6,21.4 2,18.8 2,15.6V7.8C2,4.6 4.6,2 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"></path></svg></a>
+</div>
+</div>
+<div class="mt-8 border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
+<p>© 2024 FitAI. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sliderItems = document.querySelectorAll('.slider-item');
+            let currentSlide = 0;
+            function showSlide(index) {
+                sliderItems.forEach((item, i) => {
+                    item.classList.remove('active');
+                    if (i === index) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % sliderItems.length;
+                showSlide(currentSlide);
+            }
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+
+            // Feature slider functionality
+            const featureSlides = document.querySelectorAll('.feature-slide');
+            const featureDots = document.querySelectorAll('[id^="feature-dot-"]');
+            let currentFeatureSlide = 0;
+
+            function showFeatureSlide(index) {
+                featureSlides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                    featureDots[i].classList.remove('bg-[var(--primary-color)]');
+                    featureDots[i].classList.add('bg-gray-300');
+                });
+                featureSlides[index].classList.add('active');
+                featureDots[index].classList.remove('bg-gray-300');
+                featureDots[index].classList.add('bg-[var(--primary-color)]');
+                currentFeatureSlide = index;
+            }
+
+            // Navigation buttons
+            document.getElementById('prev-feature').addEventListener('click', () => {
+                const newIndex = currentFeatureSlide > 0 ? currentFeatureSlide - 1 : featureSlides.length - 1;
+                showFeatureSlide(newIndex);
+            });
+
+            document.getElementById('next-feature').addEventListener('click', () => {
+                const newIndex = (currentFeatureSlide + 1) % featureSlides.length;
+                showFeatureSlide(newIndex);
+            });
+
+            // Dot navigation
+            featureDots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    showFeatureSlide(index);
+                });
+            });
+
+            // Auto slide features
+            setInterval(() => {
+                const newIndex = (currentFeatureSlide + 1) % featureSlides.length;
+                showFeatureSlide(newIndex);
+            }, 8000); // Change feature slide every 8 seconds
+        });
+    </script>
+
+</body></html>

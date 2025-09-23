@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Diet Plan Generator - FitAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #11d452 0%, #0d1b12 100%);
+        }
+        .card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Consistent Branding Header -->
+    {% include 'includes/header.html' %}
+
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl w-full space-y-8">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold text-gray-900 mb-2">AI Diet Plan Generator</h2>
+                <p class="text-lg text-gray-600 mb-8">Get personalized meal plans powered by advanced machine learning</p>
+            </div>
+
+            <div class="card rounded-2xl shadow-xl p-8">
+                <form class="space-y-6" method="post" id="dietForm">
+                    {% csrf_token %}
+
+                    <!-- Personal Information -->
+                    <div class="bg-blue-50 rounded-lg p-4 mb-6">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-4">Personal Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="age" class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                                <input type="number" id="age" name="age" min="10" max="120" required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                                <select id="gender" name="gender" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
+                                <input type="number" id="weight" name="weight" min="30" max="300" step="0.1" required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="height" class="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
+                                <input type="number" id="height" name="height" min="100" max="250" required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Goals and Preferences -->
+                    <div class="bg-green-50 rounded-lg p-4 mb-6">
+                        <h3 class="text-lg font-semibold text-green-900 mb-4">Goals & Preferences</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="goal" class="block text-sm font-medium text-gray-700 mb-1">Goal</label>
+                                <select id="goal" name="goal" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                    <option value="">Select Goal</option>
+                                    <option value="lose_weight">Lose Weight</option>
+                                    <option value="maintain_weight">Maintain Weight</option>
+                                    <option value="gain_weight">Gain Weight</option>
+                                    <option value="build_muscle">Build Muscle</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="activity_level" class="block text-sm font-medium text-gray-700 mb-1">Activity Level</label>
+                                <select id="activity_level" name="activity_level" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                    <option value="">Select Activity Level</option>
+                                    <option value="sedentary">Sedentary (little/no exercise)</option>
+                                    <option value="lightly_active">Lightly Active (light exercise 1-3 days/week)</option>
+                                    <option value="moderately_active">Moderately Active (moderate exercise 3-5 days/week)</option>
+                                    <option value="very_active">Very Active (hard exercise 6-7 days/week)</option>
+                                    <option value="extremely_active">Extremely Active (very hard exercise, physical job)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="diet_type" class="block text-sm font-medium text-gray-700 mb-1">Diet Type</label>
+                                <select id="diet_type" name="diet_type" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                    <option value="">Select Diet Type</option>
+                                    <option value="balanced">Balanced Diet</option>
+                                    <option value="protein_rich">High Protein</option>
+                                    <option value="low_carb">Low Carb</option>
+                                    <option value="vegetarian">Vegetarian</option>
+                                    <option value="vegan">Vegan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="calories" class="block text-sm font-medium text-gray-700 mb-1">Target Calories (optional)</label>
+                                <input type="number" id="calories" name="calories" min="1200" max="5000"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                       placeholder="Auto-calculated if empty">
+                                <p class="text-xs text-gray-500 mt-1">Leave empty for auto-calculation</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Information -->
+                    <div class="bg-purple-50 rounded-lg p-4 mb-6">
+                        <h3 class="text-lg font-semibold text-purple-900 mb-4">Health Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="allergies" class="block text-sm font-medium text-gray-700 mb-1">Allergies (optional)</label>
+                                <input type="text" id="allergies" name="allergies"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                       placeholder="e.g., nuts, dairy, gluten">
+                            </div>
+                            <div>
+                                <label for="medical_conditions" class="block text-sm font-medium text-gray-700 mb-1">Medical Conditions (optional)</label>
+                                <input type="text" id="medical_conditions" name="medical_conditions"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                       placeholder="e.g., diabetes, hypertension">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="save_preferences" name="save_preferences" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="save_preferences" class="ml-2 block text-sm text-gray-700">
+                            Save my preferences for future use
+                        </label>
+                    </div>
+
+                    <div>
+                        <button type="submit"
+                                class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition hover:scale-105">
+                            <span class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                Generate My Personalized Diet Plan
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Features Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="text-center p-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-1">AI-Powered</h3>
+                    <p class="text-sm text-gray-600">Advanced machine learning algorithms</p>
+                </div>
+                <div class="text-center p-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-1">Personalized</h3>
+                    <p class="text-sm text-gray-600">Tailored to your specific needs</p>
+                </div>
+                <div class="text-center p-4">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-1">Science-Based</h3>
+                    <p class="text-sm text-gray-600">Nutritionally balanced recommendations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-calculate calories based on user inputs
+        function calculateCalories() {
+            const age = parseInt(document.getElementById('age').value);
+            const gender = document.getElementById('gender').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseInt(document.getElementById('height').value);
+            const activityLevel = document.getElementById('activity_level').value;
+            const goal = document.getElementById('goal').value;
+
+            if (age && gender && weight && height && activityLevel && goal) {
+                let bmr;
+
+                // Calculate BMR using Mifflin-St Jeor Equation
+                if (gender === 'male') {
+                    bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+                } else {
+                    bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+                }
+
+                // Activity level multipliers
+                const activityMultipliers = {
+                    'sedentary': 1.2,
+                    'lightly_active': 1.375,
+                    'moderately_active': 1.55,
+                    'very_active': 1.725,
+                    'extremely_active': 1.9
+                };
+
+                const tdee = bmr * activityMultipliers[activityLevel];
+
+                // Goal adjustments
+                let targetCalories;
+                switch (goal) {
+                    case 'lose_weight':
+                        targetCalories = tdee - 500; // 500 calorie deficit
+                        break;
+                    case 'gain_weight':
+                        targetCalories = tdee + 500; // 500 calorie surplus
+                        break;
+                    case 'build_muscle':
+                        targetCalories = tdee + 300; // 300 calorie surplus
+                        break;
+                    default:
+                        targetCalories = tdee; // maintenance
+                }
+
+                // Ensure minimum calories
+                targetCalories = Math.max(targetCalories, 1200);
+
+                document.getElementById('calories').value = Math.round(targetCalories);
+            }
+        }
+
+        // Add event listeners for auto-calculation
+        document.getElementById('age').addEventListener('input', calculateCalories);
+        document.getElementById('gender').addEventListener('change', calculateCalories);
+        document.getElementById('weight').addEventListener('input', calculateCalories);
+        document.getElementById('height').addEventListener('input', calculateCalories);
+        document.getElementById('activity_level').addEventListener('change', calculateCalories);
+        document.getElementById('goal').addEventListener('change', calculateCalories);
+    </script>
+</body>
+</html>

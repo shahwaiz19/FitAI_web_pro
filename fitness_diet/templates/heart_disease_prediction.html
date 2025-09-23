@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction - FitAI</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        :root {
+            --primary-color: #11d452;
+            --secondary-color: #f8fcf9;
+            --text-primary: #0d1b12;
+            --text-secondary: #4c9a66;
+            --accent-color: #e8f5e8;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: linear-gradient(135deg, #f8fcf9 0%, #e8f5e8 100%);
+            min-height: 100vh;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #11d452 0%, #0ea33b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-input {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+
+        .form-input:focus {
+            border-color: #11d452;
+            box-shadow: 0 0 0 3px rgba(17, 212, 82, 0.1);
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fcf9 100%);
+            border: 1px solid rgba(17, 212, 82, 0.2);
+            box-shadow: 0 8px 32px rgba(17, 212, 82, 0.1);
+        }
+
+        .risk-high {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 1px solid #fca5a5;
+        }
+
+        .risk-low {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 1px solid #6ee7b7;
+        }
+    </style>
+</head>
+<body class="relative">
+    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-4xl">
+            <!-- Header -->
+            <div class="text-center mb-8 fade-in">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-400 to-red-600 rounded-full mb-6 shadow-lg">
+                    <span class="material-symbols-outlined text-3xl text-white">favorite</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Heart Disease Prediction</h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">AI-powered heart health assessment using machine learning to analyze your risk factors</p>
+            </div>
+
+            <!-- Main Content -->
+            <div class="glass-effect rounded-2xl shadow-2xl p-8 md:p-12 fade-in">
+                <form id="heart-disease-form" class="space-y-8">
+                    {% csrf_token %}
+
+                    <!-- Input Form -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Age</label>
+                            <input type="number" id="age" name="age" class="form-input w-full px-4 py-3 rounded-lg" placeholder="Enter your age" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                            <select id="sex" name="sex" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Select gender</option>
+                                <option value="0">Female</option>
+                                <option value="1">Male</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Chest Pain Type</label>
+                            <select id="chest_pain_type" name="chest_pain_type" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Select chest pain type</option>
+                                <option value="ASY">Asymptomatic</option>
+                                <option value="ATA">Atypical Angina</option>
+                                <option value="NAP">Non-anginal Pain</option>
+                                <option value="TA">Typical Angina</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Resting Blood Pressure (mm Hg)</label>
+                            <input type="number" id="resting_bp" name="resting_bp" class="form-input w-full px-4 py-3 rounded-lg" placeholder="120" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Cholesterol (mg/dl)</label>
+                            <input type="number" id="cholesterol" name="cholesterol" class="form-input w-full px-4 py-3 rounded-lg" placeholder="200" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Fasting Blood Sugar > 120 mg/dl</label>
+                            <select id="fasting_bs" name="fasting_bs" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Resting ECG Results</label>
+                            <select id="resting_ecg" name="resting_ecg" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Select</option>
+                                <option value="Normal">Normal</option>
+                                <option value="LVH">Left Ventricular Hypertrophy</option>
+                                <option value="ST">ST-T wave abnormality</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Maximum Heart Rate</label>
+                            <input type="number" id="max_hr" name="max_hr" class="form-input w-full px-4 py-3 rounded-lg" placeholder="150" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Exercise Induced Angina</label>
+                            <select id="exercise_angina" name="exercise_angina" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ST Depression (Oldpeak)</label>
+                            <input type="number" step="0.1" id="oldpeak" name="oldpeak" class="form-input w-full px-4 py-3 rounded-lg" placeholder="1.0" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">ST Slope</label>
+                            <select id="st_slope" name="st_slope" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Select</option>
+                                <option value="Flat">Flat</option>
+                                <option value="Up">Upsloping</option>
+                                <option value="Down">Downsloping</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Analyze Button -->
+                    <div class="text-center">
+                        <button type="submit" id="analyze-btn" class="inline-flex items-center justify-center px-12 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            <span class="material-symbols-outlined mr-3 text-2xl">analytics</span>
+                            Analyze Heart Health
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Loading State -->
+                <div id="loading" class="mt-12 hidden text-center">
+                    <div class="inline-flex items-center space-x-4 bg-white rounded-full px-8 py-4 shadow-lg">
+                        <div class="animate-spin rounded-full h-8 w-8 border-4 border-red-500 border-t-transparent"></div>
+                        <div>
+                            <p class="text-lg font-semibold text-gray-800">Analyzing your heart health...</p>
+                            <p class="text-sm text-gray-600">This may take a few seconds</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div id="results" class="mt-12 hidden">
+                    <div class="result-card rounded-2xl p-8">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center">
+                                <span class="material-symbols-outlined text-3xl text-white" id="result-icon">check_circle</span>
+                            </div>
+                        </div>
+
+                        <h3 class="text-3xl font-bold text-center gradient-text mb-8" id="result-title">Analysis Complete!</h3>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Risk Assessment -->
+                            <div class="space-y-6">
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-red-600">warning</span>
+                                        Risk Assessment
+                                    </h4>
+                                    <div class="text-center">
+                                        <div class="text-4xl font-bold mb-2" id="risk-level">Low Risk</div>
+                                        <div class="text-2xl text-red-600 font-semibold" id="probability">0%</div>
+                                        <p class="text-sm text-gray-600 mt-2">Probability of Heart Disease</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-red-600">info</span>
+                                        Recommendations
+                                    </h4>
+                                    <ul class="space-y-2 text-sm text-gray-700" id="recommendations">
+                                        <li class="flex items-start">
+                                            <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                                            <span>Maintain a healthy lifestyle</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                                            <span>Regular exercise and balanced diet</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                                            <span>Regular health check-ups</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Health Insights -->
+                            <div class="space-y-6">
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-red-600">insights</span>
+                                        Health Insights
+                                    </h4>
+                                    <div id="insights" class="space-y-3 text-sm text-gray-700">
+                                        <p>• Your cardiovascular health appears to be in good condition</p>
+                                        <p>• Continue monitoring your blood pressure and cholesterol levels</p>
+                                        <p>• Maintain regular physical activity</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-red-600">local_hospital</span>
+                                        Next Steps
+                                    </h4>
+                                    <div id="next-steps" class="space-y-2 text-sm text-gray-700">
+                                        <p>• Schedule regular check-ups with your doctor</p>
+                                        <p>• Monitor your blood pressure at home</p>
+                                        <p>• Maintain a heart-healthy diet</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
+                            <button onclick="analyzeAgain()" class="inline-flex items-center justify-center px-8 py-3 bg-gray-200 text-gray-800 font-semibold rounded-full hover:bg-gray-300 transition-colors">
+                                <span class="material-symbols-outlined mr-2">refresh</span>
+                                Analyze Again
+                            </button>
+                            <button onclick="saveResults()" class="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:scale-105 transition-all">
+                                <span class="material-symbols-outlined mr-2">save</span>
+                                Save Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="error" class="mt-12 hidden">
+                    <div class="bg-red-50 border-2 border-red-200 rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-3xl text-red-600">error</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-red-800 mb-2">Analysis Failed</h3>
+                        <p id="error-message" class="text-red-600">Unable to analyze your data. Please try again.</p>
+                        <button onclick="tryAgain()" class="mt-4 inline-flex items-center justify-center px-6 py-2 bg-red-600 text-white font-semibold rounded-full hover:bg-red-700 transition-colors">
+                            <span class="material-symbols-outlined mr-2">refresh</span>
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-8 text-gray-600">
+                <p class="text-sm">AI-Powered Health Analysis • For informational purposes only</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form submission
+        const form = document.getElementById('heart-disease-form');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const error = document.getElementById('error');
+        const analyzeBtn = document.getElementById('analyze-btn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Show loading
+            loading.classList.remove('hidden');
+            results.classList.add('hidden');
+            error.classList.add('hidden');
+            analyzeBtn.disabled = true;
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            try {
+                // Make API call
+                const response = await fetch('/heart-disease-prediction/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    updateResults(result);
+                    loading.classList.add('hidden');
+                    results.classList.remove('hidden');
+                } else {
+                    throw new Error(result.error || 'Analysis failed');
+                }
+
+            } catch (error) {
+                showError(error.message || 'Failed to analyze data. Please try again.');
+            } finally {
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        function updateResults(data) {
+            // Update risk level and probability
+            const riskLevel = data.risk_level;
+            const probability = data.probability;
+
+            document.getElementById('risk-level').textContent = riskLevel + ' Risk';
+            document.getElementById('probability').textContent = probability + '%';
+
+            // Update result styling based on risk
+            const resultCard = document.querySelector('.result-card');
+            const resultIcon = document.getElementById('result-icon');
+            const resultTitle = document.getElementById('result-title');
+
+            if (riskLevel === 'High') {
+                resultCard.classList.add('risk-high');
+                resultIcon.textContent = 'warning';
+                resultTitle.textContent = 'High Risk Detected!';
+            } else {
+                resultCard.classList.add('risk-low');
+                resultIcon.textContent = 'check_circle';
+                resultTitle.textContent = 'Low Risk - Good Health!';
+            }
+
+            // Update recommendations based on risk
+            updateRecommendations(riskLevel, probability);
+        }
+
+        function updateRecommendations(riskLevel, probability) {
+            const recommendations = document.getElementById('recommendations');
+            const insights = document.getElementById('insights');
+            const nextSteps = document.getElementById('next-steps');
+
+            if (riskLevel === 'High') {
+                recommendations.innerHTML = `
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-red-500 text-sm mt-0.5">warning</span>
+                        <span>Consult with a cardiologist immediately</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-red-500 text-sm mt-0.5">warning</span>
+                        <span>Monitor blood pressure and cholesterol closely</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-red-500 text-sm mt-0.5">warning</span>
+                        <span>Consider lifestyle modifications</span>
+                    </li>
+                `;
+
+                insights.innerHTML = `
+                    <p>• Your risk factors indicate potential heart health concerns</p>
+                    <p>• Early intervention can significantly improve outcomes</p>
+                    <p>• Regular monitoring and medical consultation recommended</p>
+                `;
+
+                nextSteps.innerHTML = `
+                    <p>• Schedule appointment with cardiologist</p>
+                    <p>• Get comprehensive cardiac evaluation</p>
+                    <p>• Follow prescribed treatment plan</p>
+                `;
+            } else {
+                recommendations.innerHTML = `
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                        <span>Maintain healthy lifestyle habits</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                        <span>Continue regular exercise routine</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                        <span>Keep up with annual health check-ups</span>
+                    </li>
+                `;
+
+                insights.innerHTML = `
+                    <p>• Your cardiovascular health appears to be in good condition</p>
+                    <p>• Continue monitoring your blood pressure and cholesterol levels</p>
+                    <p>• Maintain regular physical activity and healthy diet</p>
+                `;
+
+                nextSteps.innerHTML = `
+                    <p>• Schedule regular check-ups with your doctor</p>
+                    <p>• Monitor your blood pressure at home</p>
+                    <p>• Maintain a heart-healthy diet and exercise routine</p>
+                `;
+            }
+        }
+
+        function showError(message) {
+            error.classList.remove('hidden');
+            document.getElementById('error-message').textContent = message;
+            loading.classList.add('hidden');
+            results.classList.add('hidden');
+            analyzeBtn.disabled = false;
+        }
+
+        function analyzeAgain() {
+            results.classList.add('hidden');
+            form.reset();
+        }
+
+        function saveResults() {
+            alert('Results saved to your health profile!');
+        }
+
+        function tryAgain() {
+            error.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

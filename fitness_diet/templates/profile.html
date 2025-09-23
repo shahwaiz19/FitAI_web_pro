@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - HealthAI</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11d452",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "foreground-light": "#0a130c",
+                        "foreground-dark": "#e8f4ec",
+                        "subtle-light": "#dce5de",
+                        "subtle-dark": "#203a28",
+                        "card-light": "#ffffff",
+                        "card-dark": "#182d1f",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-foreground-light dark:text-foreground-dark">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-subtle-light dark:border-subtle-dark bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm px-4 md:px-8 lg:px-16 py-3">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 text-primary">
+                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path></svg>
+                </div>
+                <h1 class="text-xl font-bold tracking-tighter">HealthAI</h1>
+            </div>
+            <nav class="hidden lg:flex items-center gap-6 text-sm font-medium">
+                <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'landing' %}">Home</a>
+                <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'dashboard' %}">Dashboard</a>
+                <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="#">Health Status</a>
+                <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="#">Suggestions</a>
+                <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="#">Diet Plans</a>
+                <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="#">Workouts</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <img alt="User avatar" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpEqcuY1JyxbM2S3E35Lb4yOPhB8-2EZXhv036qZ1oj9_o5I7BSNzc4Hws2IXsnydxBPkKfxs35ZHf_1jlOuirb382Cvz9PgRE5I82cfB_vTK-q4d7RJullSBSUSIFOk3E2xPH-QFO4X_O7E6BIQbhNMtjV91Dbyr7GnCd3HOlqPZYRXS4qUKwX1JVzJJ4g5I-TphHD8Qr6h-NWd9WjrLLgjoXEFj35BowLNKniVUV_vD-Ff0JZYxIJGutDTUbLRO-Nxad04sq9L30"/>
+                <button class="lg:hidden p-2">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-grow px-4 md:px-8 lg:px-16 py-8">
+            <div class="max-w-2xl mx-auto">
+                <h1 class="text-4xl font-bold tracking-tight mb-8">Profile Settings</h1>
+
+                <div class="space-y-10">
+                    <!-- Account Settings -->
+                    <section class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4 border-b border-subtle-light dark:border-subtle-dark pb-2">Account Settings</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-foreground-light dark:text-foreground-dark font-medium">Password</p>
+                                    <p class="text-foreground-light/60 dark:text-foreground-dark/60 text-sm">Change your password</p>
+                                </div>
+                                <a href="/accounts/password/change/" class="px-4 py-2 bg-subtle-light dark:bg-subtle-dark text-foreground-light dark:text-foreground-dark rounded-lg hover:bg-primary/10 transition-colors inline-block">
+                                    Change
+                                </a>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-foreground-light dark:text-foreground-dark font-medium">Email</p>
+                                    <p class="text-foreground-light/60 dark:text-foreground-dark/60 text-sm">Update your email address</p>
+                                </div>
+                                <a href="/accounts/email/" class="px-4 py-2 bg-subtle-light dark:bg-subtle-dark text-foreground-light dark:text-foreground-dark rounded-lg hover:bg-primary/10 transition-colors inline-block">
+                                    Update
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Personal Information -->
+                    <section class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4 border-b border-subtle-light dark:border-subtle-dark pb-2">Personal Information</h3>
+                        <form method="post" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {% csrf_token %}
+                            <div class="flex flex-col">
+                                <label class="text-foreground-light dark:text-foreground-dark font-medium mb-2">Name</label>
+                                <input type="text" name="name" value="{{ user_profile.name }}" class="px-4 py-3 border border-subtle-light dark:border-subtle-dark rounded-lg bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-foreground-light dark:text-foreground-dark font-medium mb-2">Age</label>
+                                <input type="number" name="age" value="{{ user_profile.age }}" class="px-4 py-3 border border-subtle-light dark:border-subtle-dark rounded-lg bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-foreground-light dark:text-foreground-dark font-medium mb-2">Weight (kg)</label>
+                                <input type="number" name="weight" step="0.1" value="{{ user_profile.weight }}" class="px-4 py-3 border border-subtle-light dark:border-subtle-dark rounded-lg bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-foreground-light dark:text-foreground-dark font-medium mb-2">Fitness Goals</label>
+                                <select name="goal" class="px-4 py-3 border border-subtle-light dark:border-subtle-dark rounded-lg bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="lose_weight" {% if user_profile.goal == 'lose_weight' %}selected{% endif %}>Lose Weight</option>
+                                    <option value="gain_weight" {% if user_profile.goal == 'gain_weight' %}selected{% endif %}>Gain Weight</option>
+                                    <option value="maintain_weight" {% if user_profile.goal == 'maintain_weight' %}selected{% endif %}>Maintain Weight</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2 flex justify-end">
+                                <button type="submit" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <!-- Profile Picture -->
+                    <section class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4 border-b border-subtle-light dark:border-subtle-dark pb-2">Profile Picture</h3>
+                        <div class="flex items-center gap-6">
+                            {% if user_profile.profile_picture %}
+                                <img alt="Profile picture" class="w-24 h-24 rounded-full border-2 border-subtle-light dark:border-subtle-dark object-cover" src="{{ user_profile.profile_picture.url }}"/>
+                            {% else %}
+                                <img alt="Profile picture" class="w-24 h-24 rounded-full border-2 border-subtle-light dark:border-subtle-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpEqcuY1JyxbM2S3E35Lb4yOPhB8-2EZXhv036qZ1oj9_o5I7BSNzc4Hws2IXsnydxBPkKfxs35ZHf_1jlOuirb382Cvz9PgRE5I82cfB_vTK-q4d7RJullSBSUSIFOk3E2xPH-QFO4X_O7E6BIQbhNMtjV91Dbyr7GnCd3HOlqPZYRXS4qUKwX1JVzJJ4g5I-TphHD8Qr6h-NWd9WjrLLgjoXEFj35BowLNKniVUV_vD-Ff0JZYxIJGutDTUbLRO-Nxad04sq9L30"/>
+                            {% endif %}
+                            <div class="flex flex-col gap-2">
+                                <form method="post" enctype="multipart/form-data" class="flex flex-col gap-2" id="profile-picture-form">
+                                    {% csrf_token %}
+                                    <input type="file" name="profile_picture" accept="image/*" class="mb-2 px-3 py-2 border border-subtle-light dark:border-subtle-dark rounded-lg bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark" id="profile-picture-input">
+                                    <div class="flex gap-2">
+                                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                                            Upload Picture
+                                        </button>
+                                        {% if user_profile.profile_picture %}
+                                            <button type="submit" name="delete_picture" value="1" class="px-4 py-2 text-sm text-red-500 hover:text-red-700 border border-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                                Delete Picture
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Notification Preferences -->
+                    <section class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4 border-b border-subtle-light dark:border-subtle-dark pb-2">Notification Preferences</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <p class="text-foreground-light dark:text-foreground-dark">Daily Workout Reminders</p>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-subtle-light dark:bg-subtle-dark peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/25 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p class="text-foreground-light dark:text-foreground-dark">Diet Plan Updates</p>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-subtle-light dark:bg-subtle-dark peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/25 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p class="text-foreground-light dark:text-foreground-dark">Progress Reports</p>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-subtle-light dark:bg-subtle-dark peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/25 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Privacy Settings -->
+                    <section class="bg-card-light dark:bg-card-dark rounded-xl shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4 border-b border-subtle-light dark:border-subtle-dark pb-2">Privacy Settings</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <p class="text-foreground-light dark:text-foreground-dark">Manage your personal data</p>
+                                <button class="px-4 py-2 bg-subtle-light dark:bg-subtle-dark text-foreground-light dark:text-foreground-dark rounded-lg hover:bg-primary/10 transition-colors">
+                                    Manage
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p class="text-foreground-light dark:text-foreground-dark">Adjust profile visibility</p>
+                                <button class="px-4 py-2 bg-subtle-light dark:bg-subtle-dark text-foreground-light dark:text-foreground-dark rounded-lg hover:bg-primary/10 transition-colors">
+                                    Adjust
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Logout -->
+                    <div class="border-t border-subtle-light dark:border-subtle-dark pt-6">
+                        <a href="{% url 'logout' %}" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                            <span class="material-symbols-outlined">logout</span>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="border-t border-subtle-light dark:border-subtle-dark">
+            <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-6 text-center text-sm text-foreground-light/60 dark:text-foreground-dark/60">
+                <p>© 2024 HealthAI. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>

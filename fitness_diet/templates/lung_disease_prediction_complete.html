@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lung Disease Prediction - FitAI</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        :root {
+            --primary-color: #11d452;
+            --secondary-color: #f8fcf9;
+            --text-primary: #0d1b12;
+            --text-secondary: #4c9a66;
+            --accent-color: #e8f5e8;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: linear-gradient(135deg, #f8fcf9 0%, #e8f5e8 100%);
+            min-height: 100vh;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #11d452 0%, #0ea33b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-input {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+
+        .form-input:focus {
+            border-color: #11d452;
+            box-shadow: 0 0 0 3px rgba(17, 212, 82, 0.1);
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fcf9 100%);
+            border: 1px solid rgba(17, 212, 82, 0.2);
+            box-shadow: 0 8px 32px rgba(17, 212, 82, 0.1);
+        }
+
+        .risk-high {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 1px solid #fca5a5;
+        }
+
+        .risk-low {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 1px solid #6ee7b7;
+        }
+    </style>
+</head>
+<body class="relative">
+    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-4xl">
+            <!-- Header -->
+            <div class="text-center mb-8 fade-in">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full mb-6 shadow-lg">
+                    <span class="material-symbols-outlined text-3xl text-white">lungs</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Lung Disease Prediction</h1>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">AI-powered lung health assessment to identify potential respiratory conditions</p>
+            </div>
+
+            <!-- Main Content -->
+            <div class="glass-effect rounded-2xl shadow-2xl p-8 md:p-12 fade-in">
+                <form id="lung-disease-form" class="space-y-8">
+                    {% csrf_token %}
+
+                    <!-- Input Form -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Age</label>
+                            <input type="number" id="age" name="age" class="form-input w-full px-4 py-3 rounded-lg" placeholder="Enter your age" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                            <select id="gender" name="gender" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Select gender</option>
+                                <option value="0">Female</option>
+                                <option value="1">Male</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Smoking</label>
+                            <select id="smoking" name="smoking" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Do you smoke?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Yellow Fingers</label>
+                            <select id="yellow_fingers" name="yellow_fingers" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Select</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Anxiety</label>
+                            <select id="anxiety" name="anxiety" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Do you experience anxiety?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Peer Pressure</label>
+                            <select id="peer_pressure" name="peer_pressure" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Affected by peer pressure?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Chronic Disease</label>
+                            <select id="chronic_disease" name="chronic_disease" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Any chronic disease?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Fatigue</label>
+                            <select id="fatigue" name="fatigue" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Do you feel fatigued?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Allergy</label>
+                            <select id="allergy" name="allergy" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Any allergies?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Wheezing</label>
+                            <select id="wheezing" name="wheezing" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Do you wheeze?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Alcohol Consumption</label>
+                            <select id="alcohol" name="alcohol" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Do you consume alcohol?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Coughing</label>
+                            <select id="coughing" name="coughing" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Do you cough frequently?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Shortness of Breath</label>
+                            <select id="shortness_of_breath" name="shortness_of_breath" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Do you experience shortness of breath?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Swallowing Difficulty</label>
+                            <select id="swallowing_difficulty" name="swallowing_difficulty" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Difficulty swallowing?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Chest Pain</label>
+                            <select id="chest_pain" name="chest_pain" class="form-input w-full px-4 py-3 rounded-lg" required>
+                                <option value="">Do you experience chest pain?</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Analyze Button -->
+                    <div class="text-center">
+                        <button type="submit" id="analyze-btn" class="inline-flex items-center justify-center px-12 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            <span class="material-symbols-outlined mr-3 text-2xl">analytics</span>
+                            Analyze Lung Health
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Loading State -->
+                <div id="loading" class="mt-12 hidden text-center">
+                    <div class="inline-flex items-center space-x-4 bg-white rounded-full px-8 py-4 shadow-lg">
+                        <div class="animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
+                        <div>
+                            <p class="text-lg font-semibold text-gray-800">Analyzing your lung health...</p>
+                            <p class="text-sm text-gray-600">This may take a few seconds</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div id="results" class="mt-12 hidden">
+                    <div class="result-card rounded-2xl p-8">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                                <span class="material-symbols-outlined text-3xl text-white" id="result-icon">check_circle</span>
+                            </div>
+                        </div>
+
+                        <h3 class="text-3xl font-bold text-center gradient-text mb-8" id="result-title">Analysis Complete!</h3>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Risk Assessment -->
+                            <div class="space-y-6">
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-blue-600">warning</span>
+                                        Risk Assessment
+                                    </h4>
+                                    <div class="text-center">
+                                        <div class="text-4xl font-bold mb-2" id="risk-level">Low Risk</div>
+                                        <div class="text-2xl text-blue-600 font-semibold" id="probability">0%</div>
+                                        <p class="text-sm text-gray-600 mt-2">Probability of Lung Disease</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-blue-600">tips_and_updates</span>
+                                        Recommendations
+                                    </h4>
+                                    <ul class="space-y-2 text-sm text-gray-700" id="recommendations">
+                                        <li class="flex items-start">
+                                            <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                                            <span>Maintain healthy respiratory habits</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                                            <span>Avoid smoking and secondhand smoke</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                                            <span>Regular lung function tests</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Health Insights -->
+                            <div class="space-y-6">
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-blue-600">insights</span>
+                                        Health Insights
+                                    </h4>
+                                    <div id="insights" class="space-y-3 text-sm text-gray-700">
+                                        <p>• Your respiratory health appears to be in good condition</p>
+                                        <p>• Continue avoiding environmental pollutants</p>
+                                        <p>• Maintain regular exercise for lung capacity</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-50 rounded-xl p-6">
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                        <span class="material-symbols-outlined mr-2 text-blue-600">local_hospital</span>
+                                        Next Steps
+                                    </h4>
+                                    <div id="next-steps" class="space-y-2 text-sm text-gray-700">
+                                        <p>• Schedule regular check-ups with your doctor</p>
+                                        <p>• Consider pulmonary function tests</p>
+                                        <p>• Maintain a healthy lifestyle</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
+                            <button onclick="analyzeAgain()" class="inline-flex items-center justify-center px-8 py-3 bg-gray-200 text-gray-800 font-semibold rounded-full hover:bg-gray-300 transition-colors">
+                                <span class="material-symbols-outlined mr-2">refresh</span>
+                                Analyze Again
+                            </button>
+                            <button onclick="saveResults()" class="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-full hover:shadow-lg transform hover:scale-105 transition-all">
+                                <span class="material-symbols-outlined mr-2">save</span>
+                                Save Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="error" class="mt-12 hidden">
+                    <div class="bg-red-50 border-2 border-red-200 rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-3xl text-red-600">error</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-red-800 mb-2">Analysis Failed</h3>
+                        <p id="error-message" class="text-red-600">Unable to analyze your data. Please try again.</p>
+                        <button onclick="tryAgain()" class="mt-4 inline-flex items-center justify-center px-6 py-2 bg-red-600 text-white font-semibold rounded-full hover:bg-red-700 transition-colors">
+                            <span class="material-symbols-outlined mr-2">refresh</span>
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-8 text-gray-600">
+                <p class="text-sm">AI-Powered Health Analysis • For informational purposes only</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form submission
+        const form = document.getElementById('lung-disease-form');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const error = document.getElementById('error');
+        const analyzeBtn = document.getElementById('analyze-btn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Show loading
+            loading.classList.remove('hidden');
+            results.classList.add('hidden');
+            error.classList.add('hidden');
+            analyzeBtn.disabled = true;
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            try {
+                // Make API call
+                const response = await fetch('/lung-disease-prediction/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    updateResults(result);
+                    loading.classList.add('hidden');
+                    results.classList.remove('hidden');
+                } else {
+                    throw new Error(result.error || 'Analysis failed');
+                }
+
+            } catch (error) {
+                showError(error.message || 'Failed to analyze data. Please try again.');
+            } finally {
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        function updateResults(data) {
+            // Update risk level and probability
+            const riskLevel = data.risk_level;
+            const probability = data.probability;
+
+            document.getElementById('risk-level').textContent = riskLevel + ' Risk';
+            document.getElementById('probability').textContent = probability + '%';
+
+            // Update result styling based on risk
+            const resultCard = document.querySelector('.result-card');
+            const resultIcon = document.getElementById('result-icon');
+            const resultTitle = document.getElementById('result-title');
+
+            if (riskLevel === 'High') {
+                resultCard.classList.add('risk-high');
+                resultIcon.textContent = 'warning';
+                resultTitle.textContent = 'High Risk Detected!';
+            } else {
+                resultCard.classList.add('risk-low');
+                resultIcon.textContent = 'check_circle';
+                resultTitle.textContent = 'Low Risk - Good Health!';
+            }
+
+            // Update recommendations based on risk
+            updateRecommendations(riskLevel, probability);
+        }
+
+        function updateRecommendations(riskLevel, probability) {
+            const recommendations = document.getElementById('recommendations');
+            const insights = document.getElementById('insights');
+            const nextSteps = document.getElementById('next-steps');
+
+            if (riskLevel === 'High') {
+                recommendations.innerHTML = `
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-red-500 text-sm mt-0.5">warning</span>
+                        <span>Consult with a pulmonologist immediately</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-red-500 text-sm mt-0.5">warning</span>
+                        <span>Quit smoking if applicable</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-red-500 text-sm mt-0.5">warning</span>
+                        <span>Get comprehensive lung function tests</span>
+                    </li>
+                `;
+
+                insights.innerHTML = `
+                    <p>• Your symptoms suggest potential lung health concerns</p>
+                    <p>• Early intervention can significantly improve outcomes</p>
+                    <p>• Professional medical evaluation recommended</p>
+                `;
+
+                nextSteps.innerHTML = `
+                    <p>• Schedule appointment with pulmonologist</p>
+                    <p>• Get chest X-ray or CT scan if recommended</p>
+                    <p>• Follow prescribed treatment plan</p>
+                `;
+            } else {
+                recommendations.innerHTML = `
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                        <span>Maintain healthy respiratory habits</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                        <span>Avoid smoking and secondhand smoke</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="material-symbols-outlined mr-2 text-green-500 text-sm mt-0.5">check</span>
+                        <span>Regular lung function tests</span>
+                    </li>
+                `;
+
+                insights.innerHTML = `
+                    <p>• Your respiratory health appears to be in good condition</p>
+                    <p>• Continue avoiding environmental pollutants</p>
+                    <p>• Maintain regular exercise for lung capacity</p>
+                `;
+
+                nextSteps.innerHTML = `
+                    <p>• Schedule regular check-ups with your doctor</p>
+                    <p>• Consider pulmonary function tests</p>
+                    <p>• Maintain a healthy lifestyle</p>
+                `;
+            }
+        }
+
+        function showError(message) {
+            error.classList.remove('hidden');
+            document.getElementById('error-message').textContent = message;
+            loading.classList.add('hidden');
+            results.classList.add('hidden');
+            analyzeBtn.disabled = false;
+        }
+
+        function analyzeAgain() {
+            results.classList.add('hidden');
+            form.reset();
+        }
+
+        function saveResults() {
+            alert('Results saved to your health profile!');
+        }
+
+        function tryAgain() {
+            error.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

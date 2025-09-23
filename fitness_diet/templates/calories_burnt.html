@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calories Burnt Predictor - FitAI</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style type="text/tailwindcss">
+        :root {
+            --primary-color: #11d452;
+            --secondary-color: #f8fcf9;
+            --text-primary: #0d1b12;
+            --text-secondary: #4c9a66;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+    <div class="relative flex size-full min-h-screen flex-col overflow-x-hidden">
+        <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-sm">
+            <div class="container mx-auto flex items-center justify-between px-6 py-4">
+                <a class="flex items-center gap-3 text-2xl font-bold text-[var(--text-primary)]" href="{% url 'landing' %}">
+                    <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">fitness_center</span> FitAI
+                </a>
+                <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                    <a class="hover:text-[var(--primary-color)] transition-colors" href="{% url 'landing' %}">Home</a>
+                    <a class="hover:text-[var(--primary-color)] transition-colors" href="#features">Features</a>
+                    <a class="hover:text-[var(--primary-color)] transition-colors" href="#health">Health</a>
+                </nav>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a class="inline-flex items-center justify-center rounded-md bg-[var(--primary-color)] px-5 py-2.5 text-sm font-semibold text-[var(--text-primary)] shadow-sm transition-transform hover:scale-105" href="{% url 'onboarding_welcome' %}">
+                        Get Started
+                    </a>
+                    <a class="inline-flex items-center justify-center rounded-md border border-[var(--primary-color)] px-5 py-2.5 text-sm font-semibold text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-[var(--text-primary)] transition-colors" href="{% url 'login' %}">
+                        Login
+                    </a>
+                </div>
+                <button class="md:hidden text-[var(--text-primary)]">
+                    <span class="material-symbols-outlined text-3xl">menu</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-grow">
+            <section class="py-20 bg-[var(--secondary-color)] fade-in">
+                <div class="container mx-auto px-6 text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold text-[var(--text-primary)] mb-6">Calories Burnt Predictor</h1>
+                    <p class="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto mb-12">
+                        Calculate the calories you'll burn during your workout using our AI-powered prediction model.
+                    </p>
+
+                    <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
+<form method="post" class="space-y-6" id="caloriesForm">
+    {% csrf_token %}
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="gender" class="block text-sm font-medium text-[var(--text-primary)] mb-2">Gender</label>
+                                    <select name="gender" id="gender" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="age" class="block text-sm font-medium text-[var(--text-primary)] mb-2">Age</label>
+                                    <input type="number" name="age" id="age" min="10" max="100" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent" placeholder="Enter your age" required>
+                                </div>
+
+                                <div>
+                                    <label for="height" class="block text-sm font-medium text-[var(--text-primary)] mb-2">Height (cm)</label>
+                                    <input type="number" name="height" id="height" min="100" max="250" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent" placeholder="Enter height in cm" required>
+                                </div>
+
+                                <div>
+                                    <label for="weight" class="block text-sm font-medium text-[var(--text-primary)] mb-2">Weight (kg)</label>
+                                    <input type="number" name="weight" id="weight" min="30" max="200" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent" placeholder="Enter weight in kg" required>
+                                </div>
+
+                                <div>
+                                    <label for="duration" class="block text-sm font-medium text-[var(--text-primary)] mb-2">Duration (minutes)</label>
+                                    <input type="number" name="duration" id="duration" min="1" max="300" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent" placeholder="Workout duration" required>
+                                </div>
+
+                                <div>
+                                    <label for="heart_rate" class="block text-sm font-medium text-[var(--text-primary)] mb-2">Heart Rate (bpm)</label>
+                                    <input type="number" name="heart_rate" id="heart_rate" min="60" max="200" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent" placeholder="Average heart rate" required>
+                                </div>
+
+                                <div>
+                                    <label for="body_temp" class="block text-sm font-medium text-[var(--text-primary)] mb-2">Body Temperature (°C)</label>
+                                    <input type="number" name="body_temp" id="body_temp" step="0.1" min="35" max="42" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent" placeholder="Body temperature" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-[var(--primary-color)] text-[var(--text-primary)] py-3 px-6 rounded-lg font-semibold text-lg hover:bg-opacity-90 transition-colors">
+                                Predict Calories Burnt
+                            </button>
+                        </form>
+
+                        <div id="resultContainer" class="mt-8 p-6 bg-[var(--secondary-color)] rounded-lg hidden">
+                            <h3 class="text-2xl font-bold text-[var(--text-primary)] mb-4">Prediction Result</h3>
+                            <div class="text-center">
+                                <div id="caloriesResult" class="text-5xl font-extrabold text-[var(--primary-color)] mb-2"></div>
+                                <p class="text-lg text-[var(--text-secondary)]">Calories Burnt</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-gray-800 text-white">
+            <div class="container mx-auto px-6 py-12">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <a class="flex items-center gap-3 text-2xl font-bold" href="{% url 'landing' %}">
+                        <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">fitness_center</span> FitAI
+                    </a>
+                    <div class="flex mt-6 md:mt-0 gap-6">
+                        <a class="hover:text-[var(--primary-color)] transition-colors" href="#">About Us</a>
+                        <a class="hover:text-[var(--primary-color)] transition-colors" href="#">Contact</a>
+                        <a class="hover:text-[var(--primary-color)] transition-colors" href="#">Privacy Policy</a>
+                        <a class="hover:text-[var(--primary-color)] transition-colors" href="#">Terms of Service</a>
+                    </div>
+                    <div class="flex mt-6 md:mt-0 gap-4">
+                        <a class="text-gray-400 hover:text-white transition-colors" href="#"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.48 2.96,10.29 2.38,10V10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16.03 6.02,17.25 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z"></path></svg></a>
+                        <a class="text-gray-400 hover:text-white transition-colors" href="#"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M17,17H14V12H17V17M17,11H14V9H17V11M7,17H10V12H7V17M7,11H10V9H7V11Z"></path></svg></a>
+                        <a class="text-gray-400 hover:text-white transition-colors" href="#"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.2,5.2 0 0,1 16.2,21.4H7.8C4.6,21.4 2,18.8 2,15.6V7.8C2,4.6 4.6,2 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"></path></svg></a>
+                    </div>
+                </div>
+                <div class="mt-8 border-t border-gray-700 pt-8 text-center text-gray-400 text-sm">
+                    <p>© 2024 FitAI. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+<script>
+document.getElementById('caloriesForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch("{% url 'calories_burnt_predictor' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.calories_burnt !== undefined) {
+            document.getElementById('caloriesResult').textContent = data.calories_burnt.toFixed(1);
+            document.getElementById('resultContainer').classList.remove('hidden');
+        } else if (data.error) {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('An error occurred: ' + error);
+    });
+});
+</script>
+</body>
+</html>

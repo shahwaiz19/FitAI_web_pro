@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#*p8_o)b4q3wafzcb2c*!&+3jem-ofy_#$%$co%tsw0lkk$+5r'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-#*p8_o)b4q3wafzcb2c*!&+3jem-ofy_#$%$co%tsw0lkk$+5r')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -169,8 +174,8 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'OAUTH_PKCE_ENABLED': True,
         'APP': {
-            'client_id': '1078564344145-uc6ts1re8cvrjqbraro5oub9th5o6e9n.apps.googleusercontent.com',
-            'secret': 'GOCSPX-V-ocpaJW-vtPke9',
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID', '1078564344145-uc6ts1re8cvrjqbraro5oub9th5o6e9n.apps.googleusercontent.com'),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', 'GOCSPX-V-ocpaJW-vtPke9'),
             'key': ''
         }
     }

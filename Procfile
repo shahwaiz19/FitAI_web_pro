@@ -1,1 +1,1 @@
-web: gunicorn fitness_diet.wsgi --log-file -
+web: cd fitness_diet && gunicorn fitness_diet.wsgi --log-file -

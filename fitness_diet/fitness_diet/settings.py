@@ -88,12 +88,8 @@ WSGI_APPLICATION = 'fitness_diet.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'fitai',
-        'USER': 'fitai_user',
-        'PASSWORD': '1sOmVmYNlpe2RZzd39MDDNrEG6gBWkhz',
-        'HOST': 'dpg-d39b5nogjchc73dkj830-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

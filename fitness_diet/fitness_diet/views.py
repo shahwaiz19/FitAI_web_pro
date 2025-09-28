@@ -13,7 +13,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from transformers import pipeline
 import torch
-import os
 
 def login_required_custom(view_func):
     def wrapper(request, *args, **kwargs):
@@ -22,7 +21,8 @@ def login_required_custom(view_func):
         return view_func(request, *args, **kwargs)
     return wrapper
 
-API_KEY = os.environ.get('USDA_API_KEY', '')
+API_KEY = "Use your own api"  // use will get api fron USDA FoodData Central
+
 
 def landing_page(request):
     if request.method == 'POST':

@@ -19,7 +19,7 @@ import os
 import numpy as np
 from django.conf import settings
 
-API_KEY = os.environ.get('USDA_API_KEY', '')
+API_KEY = "USE YOUR OWN API " // YHOU WILL GET IT FROM usda food data center
 
 def landing_page(request):
     # Check if there's a pending redirect from OAuth login

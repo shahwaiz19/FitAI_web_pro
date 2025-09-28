@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from transformers import pipeline
 import torch
+import os
 
 def login_required_custom(view_func):
     def wrapper(request, *args, **kwargs):

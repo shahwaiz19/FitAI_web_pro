@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from transformers import pipeline
 import torch
+import os
 
 API_KEY = os.environ.get('USDA_API_KEY', '')
 

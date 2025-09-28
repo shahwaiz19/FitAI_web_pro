@@ -16,23 +16,31 @@ from transformers import pipeline
 import torch
 import joblib
 import os
+import numpy as np
 from django.conf import settings
 
 API_KEY = "nhBUZbSkmWY38fTowunb16U3tFrKqlOGIEDqYGNI"
 
 def landing_page(request):
+    # Check if there's a pending redirect from OAuth login
+    redirect_url = request.session.pop('redirect_after_login', None)
+    if redirect_url:
+        return redirect(redirect_url)
     return render(request, 'landing.html')
 
 from django.core.exceptions import MultipleObjectsReturned
 
 def login_view(request):
+    from django.contrib.auth import authenticate, login as django_login
+    from django.contrib.auth.models import User
+    
     if request.method == 'POST':
         login = request.POST.get('login')  # Can be email or username
         password = request.POST.get('password')
 
         try:
             # Try to find user by email first
-            user = UserProfile.objects.get(email=login)
+            user_profile = UserProfile.objects.get(email=login)
         except UserProfile.DoesNotExist:
             messages.error(request, 'User not found with the provided email.')
             return render(request, 'login.html')
@@ -40,24 +48,36 @@ def login_view(request):
             messages.error(request, 'Multiple accounts found with this email. Please contact support.')
             return render(request, 'login.html')
 
-        if check_password(password, user.password):
+        if check_password(password, user_profile.password):
+            # Try to find or create corresponding Django User
+            try:
+                django_user = User.objects.get(email=login)
+            except User.DoesNotExist:
+                # Create Django User for this UserProfile
+                django_user = User.objects.create_user(
+                    username=login,
+                    email=login,
+                    first_name=user_profile.name.split()[0] if user_profile.name else '',
+                    last_name=' '.join(user_profile.name.split()[1:]) if user_profile.name and len(user_profile.name.split()) > 1 else ''
+                )
+                django_user.set_password(password)
+                django_user.save()
+            
+            # Authenticate and login with Django's system
+            django_user = authenticate(request, username=login, password=password)
+            if django_user:
+                django_login(request, django_user)
+            
             # Store user info in session
-            request.session['user_id'] = user.id
-            request.session['user_name'] = user.name
-            request.session['user_email'] = user.email
-            request.session['user_goal'] = user.goal
+            request.session['user_id'] = user_profile.id
+            request.session['user_name'] = user_profile.name
+            request.session['user_email'] = user_profile.email
+            request.session['user_goal'] = user_profile.goal
 
-            messages.success(request, f'Welcome back, {user.name}!')
+            messages.success(request, f'Welcome back, {user_profile.name}!')
 
-            # Redirect based on goal
-            if user.goal == 'gain_weight':
-                return redirect('gain_weight_plan')
-            elif user.goal == 'lose_weight':
-                return redirect('lose_weight_plan')
-            elif user.goal == 'maintain_weight':
-                return redirect('maintain_weight_plan')
-            else:
-                return redirect('landing')
+            # Redirect to dashboard instead of goal-specific pages
+            return redirect('dashboard')
         else:
             messages.error(request, 'Invalid email or password.')
 
@@ -102,8 +122,10 @@ def onboarding_info(request):
     return render(request, 'onboarding_info.html', {'form': form})
 
 def onboarding_account(request):
-    if 'weekly_goal' not in request.session:
-        return redirect('onboarding_info')
+    required_keys = ['name', 'goal', 'age', 'sex', 'height', 'weight', 'weekly_goal']
+    for key in required_keys:
+        if key not in request.session:
+            return redirect('onboarding_welcome')
     if request.method == 'POST':
         form = OnboardingAccountForm(request.POST)
         if form.is_valid():
@@ -120,20 +142,46 @@ def onboarding_account(request):
                 return render(request, 'onboarding_account.html', {'form': form})
 
             # Save to database
-            user_profile = UserProfile.objects.create(
-                name=request.session['name'],
-                goal=request.session['goal'],
-                age=request.session['age'],
-                sex=request.session['sex'],
-                height=request.session['height'],
-                weight=request.session['weight'],
-                weekly_goal=request.session['weekly_goal'],
-                email=email,
-                password=make_password(form.cleaned_data['password'])
-            )
+            try:
+                user_profile = UserProfile.objects.create(
+                    name=request.session['name'],
+                    goal=request.session['goal'],
+                    age=request.session['age'],
+                    sex=request.session['sex'],
+                    height=request.session['height'],
+                    weight=request.session['weight'],
+                    weekly_goal=request.session['weekly_goal'],
+                    email=email,
+                    password=make_password(form.cleaned_data['password'])
+                )
+            except Exception as e:
+                print(f"Error creating user profile: {e}")
+                messages.error(request, 'An error occurred while creating your account. Please try again.')
+                return render(request, 'onboarding_account.html', {'form': form})
+
+            # Create Django User and log in
+            from django.contrib.auth.models import User
+            from django.contrib.auth import authenticate, login as django_login
+
+            try:
+                django_user = User.objects.get(email=user_profile.email)
+            except User.DoesNotExist:
+                django_user = User.objects.create_user(
+                    username=user_profile.email,
+                    email=user_profile.email,
+                    first_name=user_profile.name.split()[0] if user_profile.name else '',
+                    last_name=' '.join(user_profile.name.split()[1:]) if user_profile.name and len(user_profile.name.split()) > 1 else ''
+                )
+                django_user.set_password(form.cleaned_data['password'])
+                django_user.save()
+
+            django_user = authenticate(request, username=user_profile.email, password=form.cleaned_data['password'])
+            if django_user:
+                django_login(request, django_user)
+
             # Clear session
             for key in ['name', 'goal', 'age', 'sex', 'height', 'weight', 'weekly_goal']:
-                del request.session[key]
+                request.session.pop(key, None)
             messages.success(request, 'Account created successfully!')
             # Redirect based on goal
             if user_profile.goal == 'gain_weight':
@@ -206,19 +254,15 @@ def handle_google_signup(sender, request, user, **kwargs):
         request.session['user_email'] = user_profile.email
         request.session['user_goal'] = user_profile.goal
 
-        # Redirect based on goal
+        # Set redirect for after allauth login
         if user_profile.goal == 'gain_weight':
-            from django.shortcuts import redirect
-            return redirect('gain_weight_plan')
+            request.session['redirect_after_login'] = 'gain_weight_plan'
         elif user_profile.goal == 'lose_weight':
-            from django.shortcuts import redirect
-            return redirect('lose_weight_plan')
+            request.session['redirect_after_login'] = 'lose_weight_plan'
         elif user_profile.goal == 'maintain_weight':
-            from django.shortcuts import redirect
-            return redirect('maintain_weight_plan')
+            request.session['redirect_after_login'] = 'maintain_weight_plan'
         else:
-            from django.shortcuts import redirect
-            return redirect('landing')
+            request.session['redirect_after_login'] = 'landing'
     else:
         print("User hasn't completed onboarding, redirecting to landing...")  # Debug log
         # User signed up but hasn't completed onboarding, redirect to landing page
@@ -254,19 +298,15 @@ def handle_google_login(sender, request, user, **kwargs):
                         del request.session[key]
                 messages.success(request, 'Account created successfully with Google!')
 
-                # Redirect based on goal
+                # Set redirect for after allauth login
                 if user_profile.goal == 'gain_weight':
-                    from django.shortcuts import redirect
-                    return redirect('gain_weight_plan')
+                    request.session['redirect_after_login'] = 'gain_weight_plan'
                 elif user_profile.goal == 'lose_weight':
-                    from django.shortcuts import redirect
-                    return redirect('lose_weight_plan')
+                    request.session['redirect_after_login'] = 'lose_weight_plan'
                 elif user_profile.goal == 'maintain_weight':
-                    from django.shortcuts import redirect
-                    return redirect('maintain_weight_plan')
+                    request.session['redirect_after_login'] = 'maintain_weight_plan'
                 else:
-                    from django.shortcuts import redirect
-                    return redirect('landing')
+                    request.session['redirect_after_login'] = 'landing'
             else:
                 print("User not in onboarding flow, redirecting to landing")  # Debug log
                 # User doesn't have a profile yet, redirect to landing page
@@ -285,19 +325,15 @@ def handle_google_login(sender, request, user, **kwargs):
 
         messages.success(request, f'Welcome back, {user_profile.name}!')
 
-        # Redirect based on goal
+        # Set redirect for after allauth login
         if user_profile.goal == 'gain_weight':
-            from django.shortcuts import redirect
-            return redirect('gain_weight_plan')
+            request.session['redirect_after_login'] = 'gain_weight_plan'
         elif user_profile.goal == 'lose_weight':
-            from django.shortcuts import redirect
-            return redirect('lose_weight_plan')
+            request.session['redirect_after_login'] = 'lose_weight_plan'
         elif user_profile.goal == 'maintain_weight':
-            from django.shortcuts import redirect
-            return redirect('maintain_weight_plan')
+            request.session['redirect_after_login'] = 'maintain_weight_plan'
         else:
-            from django.shortcuts import redirect
-            return redirect('landing')
+            request.session['redirect_after_login'] = 'landing'
 
 def gain_weight_plan(request):
     # Check if user is logged in
@@ -338,34 +374,27 @@ def dashboard(request):
 def predict_weight_change(request):
     if request.method == 'POST':
         try:
-            # Get form data - need to collect all required fields for the 10-feature model
+            # Get form data - matching the 5 features expected by the model
             age = int(request.POST.get('age', 25))
             gender = request.POST.get('gender', 'male')
-            current_weight_lbs = float(request.POST.get('current_weight', 150)) * 2.20462  # Convert kg to lbs
-            target_weight = float(request.POST.get('target_weight', 145))
+            current_weight = float(request.POST.get('current_weight', 70))  # Already in kg
+            target_weight = float(request.POST.get('target_weight', 65))
             duration_weeks = int(request.POST.get('duration_weeks', 8))
             physical_activity_level = request.POST.get('physical_activity_level', 'moderately_active')
 
-            # Additional fields that need to be estimated or collected
-            # For now, use reasonable defaults or estimates
-            bmr = 2000  # Base Metabolic Rate - could be calculated properly
-            daily_calories_consumed = 2200  # Estimated daily consumption
-            sleep_quality = 'Good'  # Default assumption
-            stress_level = 3  # Default medium stress
-
             # Calculate daily caloric surplus/deficit based on weight goals
-            target_weight_lbs = target_weight * 2.20462  # Convert target to lbs
-            weight_difference_lbs = target_weight_lbs - current_weight_lbs
-            total_calories_needed = weight_difference_lbs * 3500  # 3500 calories per lb
+            weight_difference_kg = target_weight - current_weight
+            total_calories_needed = weight_difference_kg * 7700  # 7700 calories per kg
             daily_caloric_surplus_deficit = total_calories_needed / (duration_weeks * 7)
 
             # Load the model
             model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'weight_change', 'weight_change_model.pkl')
             model_dict = joblib.load(model_path)
             model = model_dict['model']
+            scaler = model_dict.get('scaler')
 
-            # Encode categorical variables (matching Flask API)
-            gender_encoded = 1 if gender.upper() == 'M' else 0
+            # Encode categorical variables (matching model expectations)
+            gender_encoded = 1 if gender.lower() == 'male' else 0
 
             activity_map = {
                 'sedentary': 0,
@@ -376,54 +405,49 @@ def predict_weight_change(request):
             }
             physical_activity_encoded = activity_map.get(physical_activity_level, 2)
 
-            sleep_map = {
-                'poor': 0,
-                'fair': 1,
-                'good': 2,
-                'excellent': 3
-            }
-            sleep_quality_encoded = sleep_map.get(sleep_quality.lower(), 2)
-
-            # Prepare features for prediction (matching the 10 features expected by model)
-            features = [[
+            # Prepare features for prediction (matching the 5 features expected by model)
+            features = np.array([[
                 age,
                 gender_encoded,
-                current_weight_lbs,
-                bmr,
-                daily_calories_consumed,
+                current_weight,
                 daily_caloric_surplus_deficit,
-                duration_weeks,
-                physical_activity_encoded,
-                sleep_quality_encoded,
-                stress_level
-            ]]
+                physical_activity_encoded
+            ]])
 
-            # Make prediction
-            prediction = model.predict(features)[0]
-            predicted_weight_change_lbs = float(prediction)
+            # Scale features if scaler exists
+            if scaler:
+                try:
+                    features_scaled = scaler.transform(features)
+                except Exception as scale_error:
+                    print(f"Scaler transform failed: {scale_error}, using unscaled features")
+                    features_scaled = features
+            else:
+                features_scaled = features
 
-            # Convert prediction back to kg for display
-            predicted_weight_change_kg = predicted_weight_change_lbs / 2.20462
+            # Make prediction - model returns [weight_change, duration]
+            prediction = model.predict(features_scaled)[0]
+            predicted_weight_change_kg = float(prediction[0])  # First output is weight change
 
             # Calculate additional metrics for display
-            weight_difference_kg = target_weight - (current_weight_lbs / 2.20462)
             weekly_change_needed = weight_difference_kg / duration_weeks
             daily_calorie_adjustment = weekly_change_needed * 7700 / 7  # 7700 calories per kg
 
             # Save the weight prediction to database
             try:
                 WeightPrediction.objects.create(
-                    current_weight=current_weight_lbs / 2.20462,  # Store in kg
+                    current_weight=current_weight,
                     duration_weeks=duration_weeks,
                     weight_change_kg=round(predicted_weight_change_kg, 2),
                     physical_activity_level=physical_activity_level
                 )
             except Exception as e:
                 print(f"Error saving weight prediction: {e}")
+                # Don't fail the whole prediction if DB save fails
+                pass
 
             context = {
                 'prediction': round(predicted_weight_change_kg, 2),
-                'current_weight': round(current_weight_lbs / 2.20462, 1),
+                'current_weight': current_weight,
                 'target_weight': target_weight,
                 'duration_weeks': duration_weeks,
                 'physical_activity_level': physical_activity_level,
@@ -571,6 +595,9 @@ def profile_view(request):
         # Handle profile picture upload
         if 'profile_picture' in request.FILES:
             uploaded_file = request.FILES['profile_picture']
+            if not uploaded_file:
+                messages.error(request, 'Please select a file to upload.')
+                return redirect('profile')
             # Validate file type
             if uploaded_file.content_type not in ['image/jpeg', 'image/png', 'image/gif']:
                 messages.error(request, 'Please upload a valid image file (JPEG, PNG, or GIF).')
@@ -610,11 +637,18 @@ def profile_view(request):
             user_profile.goal = request.POST.get('goal', user_profile.goal)
             user_profile.save()
 
+            # Sync session with updated profile
+            request.session['user_name'] = user_profile.name
+            request.session['user_email'] = user_profile.email
+            request.session['user_goal'] = user_profile.goal
+
             messages.success(request, 'Profile updated successfully!')
             return redirect('profile')
 
+    user_profile_pic_url = user_profile.profile_picture.url if user_profile.profile_picture else ''
     context = {
         'user_profile': user_profile,
+        'user_profile_pic_url': user_profile_pic_url,
     }
     return render(request, 'profile.html', context)
 

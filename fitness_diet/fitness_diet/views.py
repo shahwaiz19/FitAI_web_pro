@@ -21,7 +21,8 @@ def login_required_custom(view_func):
         return view_func(request, *args, **kwargs)
     return wrapper
 
-API_KEY = "nhBUZbSkmWY38fTowunb16U3tFrKqlOGIEDqYGNI"
+API_KEY = "Use your own api"  // use will get api fron USDA FoodData Central
+
 
 def landing_page(request):
     if request.method == 'POST':

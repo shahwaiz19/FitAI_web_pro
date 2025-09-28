@@ -47,10 +47,9 @@
 <div class="relative flex min-h-screen w-full flex-col">
 <header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-subtle-light dark:border-subtle-dark bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm px-4 md:px-8 lg:px-16 py-3">
 <div class="flex items-center gap-3">
-<div class="w-8 h-8 text-primary">
-<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path></svg>
-</div>
-<h1 class="text-xl font-bold tracking-tighter">HealthAI</h1>
+<a class="flex items-center gap-3 text-xl font-bold tracking-tighter text-foreground-light dark:text-foreground-dark" href="{% url 'landing' %}">
+    <span class="material-symbols-outlined text-3xl text-primary">fitness_center</span> FitAI
+</a>
 </div>
 <nav class="hidden lg:flex items-center gap-6 text-sm font-medium">
 <a class="text-foreground-light dark:text-foreground-dark hover:text-primary transition-colors" href="{% url 'landing' %}">Home</a>
@@ -62,7 +61,10 @@
 </nav>
 <div class="flex items-center gap-4">
 <a href="{% url 'profile' %}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-<img alt="User avatar" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpEqcuY1JyxbM2S3E35Lb4yOPhB8-2EZXhv036qZ1oj9_o5I7BSNzc4Hws2IXsnydxBPkKfxs35ZHf_1jlOuirb382Cvz9PgRE5I82cfB_vTK-q4d7RJullSBSUSIFOk3E2xPH-QFO4X_O7E6BIQbhNMtjV91Dbyr7GnCd3HOlqPZYRXS4qUKwX1JVzJJ4g5I-TphHD8Qr6h-NWd9WjrLLgjoXEFj35BowLNKniVUV_vD-Ff0JZYxIJGutDTUbLRO-Nxad04sq9L30"/>
+<img alt="User avatar" class="w-10 h-10 rounded-full object-cover border-2 border-primary/20"
+     src="{{ user_profile_pic_url }}"
+     onerror="this.src='{{ STATIC_URL }}images/default-avatar.svg'"
+     loading="lazy">
 </a>
 <button class="lg:hidden p-2">
 <span class="material-symbols-outlined">menu</span>
@@ -254,7 +256,7 @@
 </main>
 <footer class="border-t border-subtle-light dark:border-subtle-dark">
 <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 py-6 text-center text-sm text-foreground-light/60 dark:text-foreground-dark/60">
-<p>© 2024 HealthAI. All rights reserved.</p>
+<p>© 2025 FitAI. All rights reserved.</p>
 </div>
 </footer>
 </div>

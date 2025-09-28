@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from transformers import pipeline
 import torch
 
-API_KEY = "nhBUZbSkmWY38fTowunb16U3tFrKqlOGIEDqYGNI"
+API_KEY = os.environ.get('USDA_API_KEY', '')
 
 @csrf_exempt
 def food_calorie_predictor(request):

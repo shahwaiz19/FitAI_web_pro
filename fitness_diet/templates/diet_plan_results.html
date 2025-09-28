@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Your Personalized Diet Plan - FitAI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     {% load static %}
     <style>
@@ -32,7 +33,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <h1 class="text-xl font-bold text-gray-900">FitAI</h1>
+                    <a href="{% url 'landing' %}" class="flex items-center gap-3 text-xl font-bold text-gray-900">
+                        <span class="material-symbols-outlined text-2xl text-primary">fitness_center</span> FitAI
+                    </a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="{% url 'landing' %}" class="text-gray-600 hover:text-gray-900">Home</a>

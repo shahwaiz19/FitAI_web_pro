@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-#*p8_o)b4q3wafzcb2c*!&+3jem-ofy_#$%$co%tsw0lkk$+5r')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'fitness_diet.context_processors.branding_context',
             ],
         },
     },
@@ -153,7 +154,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-LOGIN_REDIRECT_URL = '/onboarding/info/'
+LOGIN_REDIRECT_URL = '/landing/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/landing/'
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 
@@ -174,8 +175,8 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'OAUTH_PKCE_ENABLED': True,
         'APP': {
-            'client_id': os.environ.get('GOOGLE_CLIENT_ID', '1078564344145-uc6ts1re8cvrjqbraro5oub9th5o6e9n.apps.googleusercontent.com'),
-            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', 'GOCSPX-V-ocpaJW-vtPke9'),
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID', ''),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', ''),
             'key': ''
         }
     }

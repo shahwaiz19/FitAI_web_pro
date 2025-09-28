@@ -19,7 +19,7 @@ import os
 import numpy as np
 from django.conf import settings
 
-API_KEY = "nhBUZbSkmWY38fTowunb16U3tFrKqlOGIEDqYGNI"
+API_KEY = os.environ.get('USDA_API_KEY', '')
 
 def landing_page(request):
     # Check if there's a pending redirect from OAuth login
